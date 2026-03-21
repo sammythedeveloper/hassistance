@@ -3,26 +3,43 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { prisma } from "@/lib/prisma";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
 export async function handleHealthConsultation(formData: {
   category: string;
   issue: string;
   sessionId: string;
 }) {
+  // 1. Initialize inside the action to ensure Environment Variables are fresh
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      systemInstruction: `You are a supportive Health Assistant specializing in ${formData.category}. 
-      Give helpful guidance but NEVER diagnose. Add a medical disclaimer.`,
+      model: "gemini-2.5-flash",
+      systemInstruction: `
+        NAME: HolisticAI Assistant.
+        ROLE: Health Assistance Protocol (NON-MEDICAL).
+
+        MANDATORY SAFETY RULES:
+        1. If the user mentions medical emergencies (chest pain, stroke, heavy bleeding, suicidal thoughts, etc.):
+           RESPONSE: "### ⚠️ EMERGENCY PROTOCOL
+           I am an AI, not a doctor. This sounds like a medical emergency. Please call 911 or visit the nearest hospital immediately."
+           STOP ALL OTHER ADVICE.
+        
+        2. If the user asks for medication dosages or prescriptions:
+           RESPONSE: "I cannot provide medical prescriptions or dosages. Please consult a licensed healthcare professional."
+
+        OPERATIONAL GUIDELINES:
+        - Focus strictly on the ${formData.category} aspect of wellness.
+        - Provide 3 actionable "Micro-Steps" for the user.
+        - TONE: Professional, minimalist, and supportive.
+        - SIGN-OFF: "Wellness Protocol Updated."
+      `,
     });
 
-    // 1. Get AI Response
+    // 2. Get AI Response
     const result = await model.generateContent(formData.issue);
     const responseText = result.response.text();
 
-    // 2. Save to Postgres (The "Full Stack" part!)
-    // We use 'upsert' to either find the existing session or create a new one
+    // 3. Save to Postgres via Prisma
     const conversation = await prisma.conversation.upsert({
       where: { sessionId: formData.sessionId },
       update: {},
@@ -50,6 +67,9 @@ export async function handleHealthConsultation(formData: {
     return { success: true, answer: responseText };
   } catch (error) {
     console.error("Database/AI Error:", error);
-    return { success: false, error: "Something went wrong on the server." };
+    return {
+      success: false,
+      error: "System Error: Unable to process protocol.",
+    };
   }
 }
