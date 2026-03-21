@@ -16,14 +16,16 @@ export default function DemoPage() {
   const [category, setCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Initialize with Greeting and Medical Disclaimer
+  // Updated content with a custom HTML-like wrapper for the disclaimer
   const [chat, setChat] = useState<{ role: string; content: string }[]>([
     {
       role: "assistant",
       content: `### Welcome to HolisticAI
 I am your automated health assistance protocol. 
 
+<div class="disclaimer">
 **DISCLAIMER:** I am an AI, not a doctor or professional. My suggestions are for informational purposes only. If you are experiencing a medical emergency, please **call 911** or visit your local hospital immediately.
+</div>
 
 **How can I optimize your wellness today?** Please select a category to begin.`,
     },
@@ -33,7 +35,10 @@ I am your automated health assistance protocol.
     setCategory(selectedCat);
     setChat((prev) => [
       ...prev,
-      { role: "user", content: `Protocol selected: ${selectedCat} Wellness.` },
+      {
+        role: "user",
+        content: `Any concern regarding ${selectedCat} Wellness ?`,
+      },
     ]);
   };
 
@@ -61,7 +66,7 @@ I am your automated health assistance protocol.
     const result = await handleHealthConsultation({
       category,
       issue: userMessage,
-      sessionId: "demo-session-1", // You can make this dynamic later
+      sessionId: "demo-session-1",
     });
 
     if (result.success && result.answer) {
@@ -135,13 +140,35 @@ I am your automated health assistance protocol.
                   }`}
                 >
                   <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none leading-relaxed">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    <ReactMarkdown
+                      components={{
+                        // This handles the red disclaimer styling
+                        div: ({ node, className, children, ...props }) => {
+                          if (className === "disclaimer") {
+                            return (
+                              <div className="my-4 p-4 border border-red-500/20 bg-red-500/5 rounded-xl text-red-600 dark:text-red-400 text-xs italic">
+                                {children}
+                              </div>
+                            );
+                          }
+                          return <div {...props}>{children}</div>;
+                        },
+                        // Makes bold text inside messages also use the red theme for emphasis
+                        strong: ({ children }) => (
+                          <strong className="text-red-600 dark:text-red-500 font-bold">
+                            {children}
+                          </strong>
+                        ),
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
                   </div>
                 </div>
               </div>
             ))}
 
-            {/* --- Category Buttons (Onboarding) --- */}
+            {/* --- Category Buttons: Green -> Orange Hover --- */}
             {!category && (
               <div className="flex flex-wrap gap-3 justify-center py-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {["Physical", "Mental", "Emotional", "Environmental"].map(
@@ -150,7 +177,10 @@ I am your automated health assistance protocol.
                       key={cat}
                       variant="outline"
                       onClick={() => handleCategorySelect(cat)}
-                      className="rounded-full border-zinc-300 dark:border-zinc-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-8 py-6 text-lg transition-all"
+                      className="rounded-full px-8 py-6 text-lg font-mono transition-all duration-300
+                                 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 
+                                 hover:border-orange-500 hover:text-orange-500 hover:bg-orange-500/5 
+                                 dark:hover:border-orange-400 dark:hover:text-orange-400"
                     >
                       {cat}
                     </Button>
@@ -162,9 +192,9 @@ I am your automated health assistance protocol.
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 p-4 rounded-3xl rounded-tl-none flex gap-1">
-                  <div className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce" />
-                  <div className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                  <div className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" />
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.2s]" />
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.4s]" />
                 </div>
               </div>
             )}
@@ -187,19 +217,19 @@ I am your automated health assistance protocol.
             }
             value={issue}
             onChange={(e) => setIssue(e.target.value)}
-            className="pr-14 py-7 font-mono rounded-2xl bg-neutral-50 dark:bg-zinc-900 border-neutral-200 dark:border-zinc-800 focus-visible:ring-black dark:focus-visible:ring-white"
+            className="pr-14 py-7 font-mono rounded-2xl bg-neutral-50 dark:bg-zinc-900 border-neutral-200 dark:border-zinc-800 focus-visible:ring-emerald-500"
           />
           <Button
             type="submit"
             disabled={loading || !issue || !category}
             size="icon"
-            className="absolute right-2 rounded-xl h-10 w-10"
+            className="absolute right-2 rounded-xl h-10 w-10 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-400"
           >
-            <Send className="h-5 w-5" />
+            <Send className="h-5 w-5 text-white" />
           </Button>
         </form>
         <p className="text-[10px] text-center text-neutral-400 dark:text-zinc-600 mt-3 font-mono tracking-widest uppercase">
-          HolisticAI Assistant • Experimental Wellness Protocol
+          Holistic <span className=" text-red-800 ">AI </span>Assistant • Experimental Wellness Protocol for programmers 😎
         </p>
       </footer>
     </div>

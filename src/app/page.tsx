@@ -119,6 +119,83 @@ export default function LandingPage() {
           </div>
         </div>
       </main>
+      {/* --- Developer-Centric Health Section --- */}
+      <section className="max-w-[1400px] mx-auto px-10 py-24 border-t border-neutral-100 dark:border-zinc-900">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 font-mono">
+          {/* Feature 1: The Logic */}
+          <div className="space-y-4 group">
+            <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform">
+              <span className="text-emerald-500 text-xs font-bold">
+                {"{ }"}
+              </span>
+            </div>
+            <h3 className="text-lg font-bold tracking-tight">
+              Debug Your Burnout
+            </h3>
+            <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
+              Stop treating symptoms. We help you find the{" "}
+              <span className="text-emerald-500">root cause</span> of mental
+              fatigue by analyzing your daily development cycles.
+            </p>
+          </div>
+
+          {/* Feature 2: The Speed */}
+          <div className="space-y-4 group">
+            <div className="h-10 w-10 rounded-lg bg-orange-500/10 flex items-center justify-center border border-orange-500/20 group-hover:scale-110 transition-transform">
+              <span className="text-orange-500 text-xs font-bold">01</span>
+            </div>
+            <h3 className="text-lg font-bold tracking-tight">
+              Zero-Slop Protocols
+            </h3>
+            <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
+              No generic advice. Get high-performance wellness{" "}
+              <span className="text-orange-500">scripts</span>—from posture
+              correction to bio-hacked nutrition for long coding sessions.
+            </p>
+          </div>
+
+          {/* Feature 3: The Security */}
+          <div className="space-y-4 group">
+            <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:scale-110 transition-transform">
+              <span className="text-blue-500 text-xs font-bold">sudo</span>
+            </div>
+            <h3 className="text-lg font-bold tracking-tight">
+              Privatized Health Data
+            </h3>
+            <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
+              Your health data stays{" "}
+              <span className="text-blue-500">local and encrypted</span>. We
+              don't sell your metrics; we just help you improve them.
+            </p>
+          </div>
+        </div>
+
+        {/* --- The "Code vs Health" Comparison Section --- */}
+        <div className="mt-32 p-12 bg-neutral-50 dark:bg-zinc-900/30 rounded-[3rem] border border-neutral-100 dark:border-zinc-800 flex flex-col items-center text-center">
+          <div className="max-w-2xl space-y-6">
+            <h2 className="text-3xl md:text-4xl font-mono tracking-tighter">
+              A Great Developer is a{" "}
+              <span className="text-emerald-500">Healthy</span> Developer.
+            </h2>
+            <p className="text-neutral-500 dark:text-zinc-400 font-mono text-sm leading-relaxed">
+              We spend hours refactoring our code, optimizing for 0.1ms
+              performance gains. It's time to apply that same{" "}
+              <span className="text-orange-500">logic</span> to the most
+              important hardware you own: your body.
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 pt-6 text-[10px] font-mono uppercase tracking-widest text-neutral-400">
+              <div className="border border-neutral-200 dark:border-zinc-800 p-4 rounded-2xl">
+                Code Quality: <span className="text-emerald-500">High</span>
+              </div>
+              <div className="border border-neutral-200 dark:border-zinc-800 p-4 rounded-2xl">
+                System Health:{" "}
+                <span className="text-orange-500">Optimizing...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
