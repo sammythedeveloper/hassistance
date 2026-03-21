@@ -3,43 +3,55 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { prisma } from "@/lib/prisma";
 
+// Updated interface to match your new frontend state
 export async function handleHealthConsultation(formData: {
   category: string;
   issue: string;
   sessionId: string;
+  userContext: {
+    stack: string;
+    os: string;
+    hoursCoded: number;
+  };
 }) {
-  // 1. Initialize inside the action to ensure Environment Variables are fresh
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.5-flash", // Using 2.0 Flash for stable performance
       systemInstruction: `
         NAME: HolisticAI Assistant.
-        ROLE: Health Assistance Protocol (NON-MEDICAL).
+        ROLE: Health Assistance Protocol for Software Engineers.
+
+        USER ENVIRONMENT:
+        - Stack Focus: ${formData.userContext.stack}
+        - OS: ${formData.userContext.os}
+        - Current Session Runtime: ${formData.userContext.hoursCoded} hours
+        - Focus Category: ${formData.category}
 
         MANDATORY SAFETY RULES:
-        1. If the user mentions medical emergencies (chest pain, stroke, heavy bleeding, suicidal thoughts, etc.):
-           RESPONSE: "### ⚠️ EMERGENCY PROTOCOL
-           I am an AI, not a doctor. This sounds like a medical emergency. Please call 911 or visit the nearest hospital immediately."
-           STOP ALL OTHER ADVICE.
-        
-        2. If the user asks for medication dosages or prescriptions:
-           RESPONSE: "I cannot provide medical prescriptions or dosages. Please consult a licensed healthcare professional."
+        1. EMERGENCY: If user mentions chest pain, stroke, or severe distress, trigger EMERGENCY PROTOCOL immediately and stop all other advice.
+        2. NO MEDS: Never provide dosages or prescriptions.
 
         OPERATIONAL GUIDELINES:
-        - Focus strictly on the ${formData.category} aspect of wellness.
-        - Provide 3 actionable "Micro-Steps" for the user.
-        - TONE: Professional, minimalist, and supportive.
-        - SIGN-OFF: "Wellness Protocol Updated."
+        - TONE: Minimalist, technical, and "Engineering-Grade."
+        - DIALECT: Use developer analogies (e.g., "Memory Leak" for burnout, "Refactor" for posture, "Latency" for fatigue).
+        - CUSTOMIZATION: 
+            * If hoursCoded > 6: Prioritize "Immediate System Shutdown" (breaks) and Ocular Reset.
+            * If stack is "Frontend/Fullstack": Mention CSS/UI-related eye strain or color-calibration (Night Shift).
+            * If stack is "Backend/DevOps": Mention the "Long-running process" of mental focus and hydration.
+        
+        RESPONSE FORMAT:
+        1. Analysis of current "System Vitals."
+        2. 3 actionable "Micro-Scripts" (steps).
+        3. SIGN-OFF: "Wellness Protocol Updated for ${formData.userContext.stack} environment."
       `,
     });
 
-    // 2. Get AI Response
     const result = await model.generateContent(formData.issue);
     const responseText = result.response.text();
 
-    // 3. Save to Postgres via Prisma
+    // Save to Postgres (keeps your 'one-time' session logic intact)
     const conversation = await prisma.conversation.upsert({
       where: { sessionId: formData.sessionId },
       update: {},
@@ -69,7 +81,7 @@ export async function handleHealthConsultation(formData: {
     console.error("Database/AI Error:", error);
     return {
       success: false,
-      error: "System Error: Unable to process protocol.",
+      error: "System Error: Wellness Protocol connection timed out.",
     };
   }
 }

@@ -79,7 +79,7 @@ export default function LandingPage() {
               <div className="flex justify-end">
                 <div className="bg-zinc-100 dark:bg-zinc-800 px-4 py-2 rounded-2xl rounded-tr-none max-w-[80%]">
                   <p className="text-[11px] text-zinc-600 dark:text-zinc-300">
-                    I've been staring at code for 8 hours and my brain feels
+                    I have been staring at code for 8 hours and my brain feels
                     fried.
                   </p>
                 </div>
