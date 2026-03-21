@@ -36,8 +36,10 @@ export default function LandingPage() {
             </span>
           </h1>
           <p className="max-w-md text-xl text-neutral-500 dark:text-zinc-400 leading-relaxed font-mono">
-            Advanced wellness guidance designed for the modern developer.
-            Secure, fast, and beautifully dark.
+            Low-latency wellness protocols for high-output engineers. Refactor
+            your lifestyle with{" "}
+            <span className="text-emerald-500">zero-slop</span> logic. Secure,
+            private, and optimized for dark mode.
           </p>
           <div className="flex items-center gap-6 pt-4">
             <Link href="/demo">
@@ -133,7 +135,7 @@ export default function LandingPage() {
               Debug Your Burnout
             </h3>
             <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
-              Stop treating symptoms. We help you find the{" "}
+              Stop treating symptoms. I help you find the{" "}
               <span className="text-emerald-500">root cause</span> of mental
               fatigue by analyzing your daily development cycles.
             </p>
@@ -164,8 +166,8 @@ export default function LandingPage() {
             </h3>
             <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
               Your health data stays{" "}
-              <span className="text-blue-500">local and encrypted</span>. We
-              don't sell your metrics; we just help you improve them.
+              <span className="text-blue-500">local and encrypted</span>. No
+              selling your metrics; I just help you improve them.
             </p>
           </div>
         </div>

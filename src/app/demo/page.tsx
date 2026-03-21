@@ -229,7 +229,8 @@ I am your automated health assistance protocol.
           </Button>
         </form>
         <p className="text-[10px] text-center text-neutral-400 dark:text-zinc-600 mt-3 font-mono tracking-widest uppercase">
-          Holistic <span className=" text-red-800 ">AI </span>Assistant • Experimental Wellness Protocol for programmers 😎
+          Holistic <span className=" text-red-800 ">AI </span>Assistant •
+          Experimental Wellness Protocol for programmers 😎
         </p>
       </footer>
     </div>

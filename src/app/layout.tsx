@@ -10,8 +10,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HolisticAI | Personal Health Assistant",
-  description: "AI-driven wellness optimization protocol.",
+  title: "Holistic AI ",
+  description: "Advanced wellness for programmers",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
