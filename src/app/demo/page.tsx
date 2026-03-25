@@ -17,14 +17,121 @@ import {
   Cpu,
   Zap,
 } from "lucide-react";
-import { calculateDeveloperMetrics } from "@/lib/telemetry";
+import { calculateDeveloperMetrics, TelemetryMetrics } from "@/lib/telemetry";
 
+// --- 1. TYPES ---
+interface ConfigState {
+  stack: string;
+  os: string;
+  hoursCoded: number;
+  theme: string;
+}
+
+interface ConfigPanelProps {
+  config: ConfigState;
+  setConfig: React.Dispatch<React.SetStateAction<ConfigState>>;
+  metrics: TelemetryMetrics;
+}
+
+// --- 2. SHARED COMPONENT (ConfigPanel) ---
+function ConfigPanel({ config, setConfig, metrics }: ConfigPanelProps) {
+  return (
+    <div className="space-y-6">
+      {/* System Load Stats */}
+      <div className="p-5 bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 rounded-[2rem] shadow-sm space-y-6">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] uppercase tracking-widest text-zinc-400">
+            System Load
+          </span>
+          <Activity className="h-3 w-3 text-emerald-500 animate-pulse" />
+        </div>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex justify-between text-[10px]">
+              <span>Focus Capacity</span>
+              <span>{metrics.focusCapacity}%</span>
+            </div>
+            <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-emerald-500 transition-all duration-700"
+                style={{ width: `${metrics.focusCapacity}%` }}
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between text-[10px]">
+              <span>Ocular Strain</span>
+              <span
+                className={metrics.ocularStrain > 50 ? "text-orange-500" : ""}
+              >
+                {metrics.ocularStrain}%
+              </span>
+            </div>
+            <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+              <div
+                className={`h-full transition-all duration-700 ${
+                  metrics.ocularStrain > 50 ? "bg-orange-500" : "bg-blue-500"
+                }`}
+                style={{ width: `${metrics.ocularStrain}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hardware Configuration */}
+      <div className="p-5 bg-zinc-100/50 dark:bg-zinc-900/50 border border-neutral-200 dark:border-zinc-800 rounded-[2rem] space-y-4">
+        <div className="flex items-center gap-2 text-[10px] text-zinc-400 uppercase tracking-tighter">
+          <Cpu className="h-3 w-3" /> Hardware Config
+        </div>
+        <div className="space-y-3">
+          <div className="flex flex-col gap-1">
+            <label className="text-[9px] text-zinc-500">
+              Hours Coded Today
+            </label>
+            <input
+              type="range"
+              min="1"
+              max="12"
+              value={config.hoursCoded}
+              onChange={(e) =>
+                setConfig({ ...config, hoursCoded: parseInt(e.target.value) })
+              }
+              className="accent-emerald-500 h-1 cursor-pointer"
+            />
+            <div className="flex justify-between text-[9px] text-zinc-400 mt-1">
+              <span>1h</span>
+              <span>{config.hoursCoded}h</span>
+              <span>12h</span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 pt-2">
+            <label className="text-[9px] text-zinc-500">Stack Focus</label>
+            <select
+              value={config.stack}
+              onChange={(e) => setConfig({ ...config, stack: e.target.value })}
+              className="bg-transparent text-xs border-none focus:ring-0 text-emerald-500 p-0 cursor-pointer"
+            >
+              <option>Full Stack</option>
+              <option>Frontend</option>
+              <option>Backend</option>
+              <option>DevOps</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+// --- 3. MAIN PAGE ---
 export default function DemoPage() {
   const [issue, setIssue] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [config, setConfig] = useState({
+
+  const [config, setConfig] = useState<ConfigState>({
     stack: "Full Stack",
     os: "MacOS",
     hoursCoded: 4,
@@ -32,26 +139,17 @@ export default function DemoPage() {
   });
 
   const metrics = calculateDeveloperMetrics(config.hoursCoded, config.stack);
-  // --- Idea 2: Developer Config State ---
 
   const [chat, setChat] = useState<{ role: string; content: string }[]>([
     {
       role: "assistant",
-      content: `### SYSTEM INITIALIZED: v1.0.4
-  **HolisticAI** is now online. Monitoring hardware telemetry and biometric strain for **${config.stack}** environment.
-  
-  <div class="disclaimer">
-  **MEDICAL SAFETY PROTOCOL:** I am an AI, not a clinical professional. For emergencies, contact **911** immediately.
-  </div>
-  
-  **SELECT OPTIMIZATION PATHWAY:**`,
+      content: `### SYSTEM INITIALIZED: v1.0.4\n**HolisticAI** is online for **${config.stack}** environment.\n\n<div class="disclaimer">\n**MEDICAL SAFETY PROTOCOL:** I am an AI, not a clinical professional. For emergencies, contact **911** immediately.\n</div>\n\n**SELECT OPTIMIZATION PATHWAY:**`,
     },
   ]);
-  // Auto-scroll to bottom
+
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current)
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
   }, [chat, loading]);
 
   const handleCategorySelect = (selectedCat: string) => {
@@ -68,8 +166,7 @@ export default function DemoPage() {
     setChat([
       {
         role: "assistant",
-        content:
-          "### Protocol Reset.\nSelect a new wellness category to begin a fresh optimization sequence.",
+        content: "### Protocol Reset.\nSelect a new wellness category.",
       },
     ]);
   };
@@ -83,7 +180,6 @@ export default function DemoPage() {
     setChat((prev) => [...prev, { role: "user", content: userMessage }]);
     setIssue("");
 
-    // --- Idea 2: Passing Config to AI ---
     const result = await handleHealthConsultation({
       category,
       issue: userMessage,
@@ -107,7 +203,36 @@ export default function DemoPage() {
 
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-zinc-950 transition-colors duration-500 overflow-hidden font-mono">
-      {/* --- Header --- */}
+      {/* Mobile Drawer */}
+      {isSettingsOpen && (
+        <div className="fixed inset-0 z-50 xl:hidden">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsSettingsOpen(false)}
+          />
+          <div className="absolute right-0 top-0 h-full w-[300px] bg-white dark:bg-zinc-950 border-l border-zinc-800 p-6 shadow-2xl animate-in slide-in-from-right duration-300 overflow-y-auto">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-emerald-500">
+                System Config
+              </h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsSettingsOpen(false)}
+              >
+                ×
+              </Button>
+            </div>
+            <ConfigPanel
+              config={config}
+              setConfig={setConfig}
+              metrics={metrics}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Header */}
       <header className="flex items-center justify-between px-6 py-6 border-b border-neutral-100 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-10">
         <div className="flex items-center gap-4">
           <Link href="/">
@@ -124,24 +249,30 @@ export default function DemoPage() {
             </h1>
           </div>
         </div>
-
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           {category && (
             <Button
               variant="ghost"
               size="sm"
               onClick={handleReset}
-              className="text-[10px] text-zinc-500 hover:text-red-500 gap-2 uppercase tracking-widest transition-colors"
+              className="text-[10px] text-zinc-500 uppercase tracking-widest"
             >
-              <RefreshCcw className="h-3 w-3" /> Reset
+              <RefreshCcw className="h-3 w-3 mr-2" /> Reset
             </Button>
           )}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="xl:hidden rounded-full text-emerald-500"
+            onClick={() => setIsSettingsOpen(true)}
+          >
+            <Settings2 className="h-5 w-5" />
+          </Button>
           <ModeToggle />
         </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden relative">
-        {/* --- Main Chat Area --- */}
         <main className="flex-1 overflow-hidden bg-neutral-50/30 dark:bg-zinc-950/50 relative">
           <ScrollArea className="h-full px-4 py-8">
             <div className="max-w-2xl mx-auto space-y-8 pb-10">
@@ -159,43 +290,43 @@ export default function DemoPage() {
                         : "bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 text-neutral-800 dark:text-zinc-200 rounded-tl-none"
                     }`}
                   >
-                    <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none leading-relaxed">
+                    <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none leading-relaxed text-xs">
                       <ReactMarkdown
                         components={{
                           // 1. Disclaimer styling
-                          div: ({ node, className, children, ...props }) => {
+                          div: ({ className, children }) => {
                             if (className === "disclaimer") {
                               return (
-                                <div className="my-6 p-4 border border-zinc-800 bg-zinc-900/50 rounded-2xl text-zinc-500 text-[10px] uppercase tracking-widest leading-relaxed italic">
+                                <div className="my-6 p-4 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl text-zinc-500 dark:text-zinc-500 text-[10px] uppercase tracking-widest leading-relaxed italic">
                                   {children}
                                 </div>
                               );
                             }
-                            return <div {...props}>{children}</div>;
+                            return <div>{children}</div>;
                           },
-                          // 2. Headers for Section titles (e.g., ### System Vitals)
+                          // 2. Section Headers
                           h3: ({ children }) => (
-                            <h3 className="text-emerald-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 mt-2 border-b border-emerald-500/10 pb-2">
+                            <h3 className="text-emerald-600 dark:text-emerald-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 mt-2 border-b border-emerald-500/10 pb-2">
                               {children}
                             </h3>
                           ),
-                          // 3. Strong text for "Keys" (no more pure red)
+                          // 3. Bold/Strong text (Key terms)
                           strong: ({ children }) => (
-                            <span className="text-emerald-400 font-mono font-medium">
+                            <span className="text-emerald-700 dark:text-emerald-400 font-mono font-semibold">
                               {children}
                             </span>
                           ),
-                          // 4. Paragraphs (control the line height and color)
+                          // 4. Main Paragraph Text (This is the one you wanted black)
                           p: ({ children }) => (
-                            <p className="text-zinc-400 text-xs leading-relaxed mb-4 last:mb-0">
+                            <p className="text-zinc-900 dark:text-zinc-400 text-xs leading-relaxed mb-4 last:mb-0">
                               {children}
                             </p>
                           ),
-                          // 5. Lists (make them look like "Micro-Scripts")
+                          // 5. List Items (Protocol Cards)
                           li: ({ children }) => (
-                            <li className="list-none mb-3 p-3 bg-zinc-900/80 border border-zinc-800 rounded-xl flex gap-3 items-start group hover:border-emerald-500/30 transition-colors">
-                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 animate-pulse" />
-                              <div className="text-[11px] text-zinc-300 font-mono">
+                            <li className="list-none mb-3 p-3 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl flex gap-3 items-start group hover:border-emerald-500/30 transition-colors">
+                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 dark:bg-emerald-500 mt-1.5 shrink-0 animate-pulse" />
+                              <div className="text-[11px] text-zinc-900 dark:text-zinc-300 font-mono">
                                 {children}
                               </div>
                             </li>
@@ -211,7 +342,6 @@ export default function DemoPage() {
                   </div>
                 </div>
               ))}
-
               {!category && (
                 <div className="flex flex-wrap gap-3 justify-center py-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                   {["Physical", "Mental", "Emotional", "Environmental"].map(
@@ -228,7 +358,6 @@ export default function DemoPage() {
                   )}
                 </div>
               )}
-
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 p-4 rounded-3xl rounded-tl-none flex gap-1">
@@ -243,111 +372,12 @@ export default function DemoPage() {
           </ScrollArea>
         </main>
 
-        {/* --- Idea 3: Right Sidebar Bio-Metrics --- */}
         <aside className="hidden xl:flex flex-col w-80 border-l border-neutral-100 dark:border-zinc-900 bg-white/50 dark:bg-zinc-950/50 p-6 space-y-6">
-          <div className="p-5 bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 rounded-[2rem] shadow-sm space-y-6">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase tracking-widest text-zinc-400">
-                System Load
-              </span>
-              <Activity className="h-3 w-3 text-emerald-500 animate-pulse" />
-            </div>
-
-            <div className="space-y-4">
-              {/* Focus Capacity Calculation */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-[10px]">
-                  <span>Focus Capacity</span>
-                  <span>{metrics.focusCapacity}%</span>
-                </div>
-                <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-emerald-500 transition-all duration-700"
-                    style={{
-                      width: `${Math.max(100 - config.hoursCoded * 8, 0)}%`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Eye Strain Calculation */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-[10px]">
-                  <span>Ocular Strain</span>
-                  <span
-                    className={
-                      metrics.burnoutRisk === "High" ||
-                      metrics.burnoutRisk === "Critical"
-                        ? "text-orange-500"
-                        : ""
-                    }
-                  >
-                    {metrics.ocularStrain}%
-                  </span>
-                </div>
-                <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full transition-all duration-700 ${
-                      config.hoursCoded > 6 ? "bg-orange-500" : "bg-blue-500"
-                    }`}
-                    style={{
-                      width: `${Math.min(config.hoursCoded * 12, 100)}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Environment Config Panel */}
-          <div className="p-5 bg-zinc-100/50 dark:bg-zinc-900/50 border border-neutral-200 dark:border-zinc-800 rounded-[2rem] space-y-4">
-            <div className="flex items-center gap-2 text-[10px] text-zinc-400 uppercase tracking-tighter">
-              <Cpu className="h-3 w-3" /> Hardware Config
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex flex-col gap-1">
-                <label className="text-[9px] text-zinc-500">
-                  Hours Coded Today
-                </label>
-                <input
-                  type="range"
-                  min="1"
-                  max="12"
-                  value={config.hoursCoded}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      hoursCoded: parseInt(e.target.value),
-                    })
-                  }
-                  className="accent-emerald-500 h-1"
-                />
-                <div className="flex justify-between text-[9px] text-zinc-400 mt-1">
-                  <span>1h</span>
-                  <span>{config.hoursCoded}h</span>
-                  <span>12h</span>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1 pt-2">
-                <label className="text-[9px] text-zinc-500">Stack Focus</label>
-                <select
-                  value={config.stack}
-                  onChange={(e) =>
-                    setConfig({ ...config, stack: e.target.value })
-                  }
-                  className="bg-transparent text-xs border-none focus:ring-0 text-emerald-500 p-0 cursor-pointer"
-                >
-                  <option>Full Stack</option>
-                  <option>Frontend</option>
-                  <option>Backend</option>
-                  <option>DevOps</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
+          <ConfigPanel
+            config={config}
+            setConfig={setConfig}
+            metrics={metrics}
+          />
           <div className="mt-auto p-4 border border-dashed border-emerald-500/20 rounded-2xl bg-emerald-500/5">
             <div className="flex justify-between items-center mb-1">
               <span className="text-[9px] font-bold text-emerald-500 uppercase">
@@ -368,7 +398,6 @@ export default function DemoPage() {
         </aside>
       </div>
 
-      {/* --- Input Area --- */}
       <footer className="p-4 border-t border-neutral-100 dark:border-zinc-800 bg-white dark:bg-zinc-950">
         <form
           onSubmit={handleSubmit}
@@ -395,9 +424,7 @@ export default function DemoPage() {
           </Button>
         </form>
         <p className="text-[10px] text-center text-neutral-400 dark:text-zinc-600 mt-3 tracking-widest uppercase">
-          Holistic <span className="text-red-800">AI</span> Assistant • Protocol
-          Optimized for <span className="text-emerald-500">{config.stack}</span>{" "}
-          Engineers 😎
+          Holistic AI Assistant • Optimized for {config.stack}
         </p>
       </footer>
     </div>
