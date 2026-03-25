@@ -5,6 +5,7 @@ export type StackFocus = "Full Stack" | "Frontend" | "Backend" | "DevOps";
 export interface TelemetryMetrics {
   focusCapacity: number;
   ocularStrain: number;
+  hoursCoded: number;
   burnoutRisk: "Low" | "Moderate" | "High" | "Critical";
   statusMessage: string;
 }
@@ -37,6 +38,7 @@ export function calculateDeveloperMetrics(
   return {
     focusCapacity: focus,
     ocularStrain: strain,
+    hoursCoded: hours,
     burnoutRisk: risk,
     statusMessage: message,
   };

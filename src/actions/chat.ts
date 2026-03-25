@@ -2,8 +2,9 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { prisma } from "@/lib/prisma";
+import { retrieveRelevantProtocols } from "@/lib/retriever"; // Our Librarian
+import { calculateDeveloperMetrics } from "@/lib/telemetry"; // Our Engine
 
-// Updated interface to match your new frontend state
 export async function handleHealthConsultation(formData: {
   category: string;
   issue: string;
@@ -12,46 +13,65 @@ export async function handleHealthConsultation(formData: {
     stack: string;
     os: string;
     hoursCoded: number;
+    // We'll calculate the rest on the fly for the RAG check
   };
 }) {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
   try {
+    // 1. DATA CALCULATION: Run the telemetry engine on the server
+    const metrics = calculateDeveloperMetrics(
+      formData.userContext.hoursCoded,
+      formData.userContext.stack
+    );
+
+    // 2. RETRIEVAL (The "R" in RAG): Find matching protocols in our Manual
+    const relevantProtocols = retrieveRelevantProtocols(metrics);
+
+    // 3. AUGMENTATION (The "A" in RAG): Format the retrieved data for the AI
+    const manualContext =
+      relevantProtocols.length > 0
+        ? relevantProtocols
+            .map((p) => `[SOURCE: ${p.source}] ${p.title}: ${p.content}`)
+            .join("\n\n")
+        : "No specific telemetry triggers detected. Provide general high-performance developer wellness advice.";
+
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash", // Using 2.0 Flash for stable performance
+      model: "gemini-2.5-flash", // Sticking with Flash for 2026 speed
       systemInstruction: `
-        NAME: HolisticAI Assistant.
-        ROLE: Health Assistance Protocol for Software Engineers.
+        NAME: HolisticAI Assistant (RAG-Enabled).
+        ROLE: Health Operating System for Engineers.
 
-        USER ENVIRONMENT:
-        - Stack Focus: ${formData.userContext.stack}
-        - OS: ${formData.userContext.os}
-        - Current Session Runtime: ${formData.userContext.hoursCoded} hours
-        - Focus Category: ${formData.category}
+        --- SYSTEM TELEMETRY DATA ---
+        - Focus Capacity: ${metrics.focusCapacity}%
+        - Ocular Strain: ${metrics.ocularStrain}%
+        - Burnout Risk: ${metrics.burnoutRisk}
+        - Current Session: ${formData.userContext.hoursCoded}h on ${
+        formData.userContext.os
+      }
+        - Primary Stack: ${formData.userContext.stack}
 
-        MANDATORY SAFETY RULES:
-        1. EMERGENCY: If user mentions chest pain, stroke, or severe distress, trigger EMERGENCY PROTOCOL immediately and stop all other advice.
-        2. NO MEDS: Never provide dosages or prescriptions.
+        --- MANDATORY KNOWLEDGE BASE PROTOCOLS ---
+        ${manualContext}
 
         OPERATIONAL GUIDELINES:
-        - TONE: Minimalist, technical, and "Engineering-Grade."
-        - DIALECT: Use developer analogies (e.g., "Memory Leak" for burnout, "Refactor" for posture, "Latency" for fatigue).
-        - CUSTOMIZATION: 
-            * If hoursCoded > 6: Prioritize "Immediate System Shutdown" (breaks) and Ocular Reset.
-            * If stack is "Frontend/Fullstack": Mention CSS/UI-related eye strain or color-calibration (Night Shift).
-            * If stack is "Backend/DevOps": Mention the "Long-running process" of mental focus and hydration.
+        - SOURCE TRUTH: You MUST prioritize the protocols from the Knowledge Base provided above.
+        - ANALOGIES: Continue using dev-speak (e.g., "Memory Leak", "Thread-Safe", "Garbage Collection").
+        - SAFETY: No meds. If emergency (Chest pain/Severe distress), trigger EMERGENCY PROTOCOL.
         
-        RESPONSE FORMAT:
-        1. Analysis of current "System Vitals."
-        2. 3 actionable "Micro-Scripts" (steps).
-        3. SIGN-OFF: "Wellness Protocol Updated for ${formData.userContext.stack} environment."
+        RESPONSE STRUCTURE:
+        1. "SYSTEM STATUS": Brief summary of telemetry and current risk.
+        2. "EXECUTABLE SCRIPTS": 3 clear, step-by-step actions (use the Knowledge Base protocols if provided).
+        3. "ENV LOG": "Wellness Protocol Sync: ${
+          formData.userContext.stack
+        } - ${new Date().toLocaleTimeString()}"
       `,
     });
 
     const result = await model.generateContent(formData.issue);
     const responseText = result.response.text();
 
-    // Save to Postgres (keeps your 'one-time' session logic intact)
+    // --- DB STORAGE ---
     const conversation = await prisma.conversation.upsert({
       where: { sessionId: formData.sessionId },
       update: {},
@@ -78,10 +98,10 @@ export async function handleHealthConsultation(formData: {
 
     return { success: true, answer: responseText };
   } catch (error) {
-    console.error("Database/AI Error:", error);
+    console.error("Critical System Failure:", error);
     return {
       success: false,
-      error: "System Error: Wellness Protocol connection timed out.",
+      error: "Protocol Connection Failure: Check server logs for digest.",
     };
   }
 }
