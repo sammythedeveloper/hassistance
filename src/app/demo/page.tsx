@@ -293,42 +293,33 @@ export default function DemoPage() {
                     <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none leading-relaxed text-xs">
                       <ReactMarkdown
                         components={{
-                          // 1. Disclaimer styling
-                          div: ({ className, children }) => {
-                            if (className === "disclaimer") {
-                              return (
-                                <div className="my-6 p-4 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl text-zinc-500 dark:text-zinc-500 text-[10px] uppercase tracking-widest leading-relaxed italic">
-                                  {children}
-                                </div>
-                              );
-                            }
-                            return <div>{children}</div>;
-                          },
-                          // 2. Section Headers
+                          div: ({ className, children }) =>
+                            className === "disclaimer" ? (
+                              <div className="my-6 p-4 border border-zinc-800 bg-zinc-900/50 rounded-2xl text-zinc-500 text-[10px] uppercase tracking-widest leading-relaxed italic">
+                                {children}
+                              </div>
+                            ) : (
+                              <div>{children}</div>
+                            ),
                           h3: ({ children }) => (
-                            <h3 className="text-emerald-600 dark:text-emerald-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 mt-2 border-b border-emerald-500/10 pb-2">
+                            <h3 className="text-emerald-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 mt-2 border-b border-emerald-500/10 pb-2">
                               {children}
                             </h3>
                           ),
-                          // 3. Bold/Strong text (Key terms)
                           strong: ({ children }) => (
-                            <span className="text-emerald-700 dark:text-emerald-400 font-mono font-semibold">
+                            <span className="text-emerald-400 font-mono font-medium">
                               {children}
                             </span>
                           ),
-                          // 4. Main Paragraph Text (This is the one you wanted black)
                           p: ({ children }) => (
-                            <p className="text-zinc-900 dark:text-zinc-400 text-xs leading-relaxed mb-4 last:mb-0">
+                            <p className="text-zinc-400 text-xs leading-relaxed mb-4 last:mb-0">
                               {children}
                             </p>
                           ),
-                          // 5. List Items (Protocol Cards)
                           li: ({ children }) => (
-                            <li className="list-none mb-3 p-3 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl flex gap-3 items-start group hover:border-emerald-500/30 transition-colors">
-                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 dark:bg-emerald-500 mt-1.5 shrink-0 animate-pulse" />
-                              <div className="text-[11px] text-zinc-900 dark:text-zinc-300 font-mono">
-                                {children}
-                              </div>
+                            <li className="list-none mb-3 p-3 bg-zinc-900/80 border border-zinc-800 rounded-xl flex gap-3 items-start group hover:border-emerald-500/30 transition-colors text-[11px] text-zinc-300 font-mono">
+                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 animate-pulse" />
+                              {children}
                             </li>
                           ),
                           ul: ({ children }) => (
