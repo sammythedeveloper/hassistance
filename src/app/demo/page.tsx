@@ -17,31 +17,34 @@ import {
   Cpu,
   Zap,
 } from "lucide-react";
+import { calculateDeveloperMetrics } from "@/lib/telemetry";
 
 export default function DemoPage() {
   const [issue, setIssue] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  // --- Idea 2: Developer Config State ---
   const [config, setConfig] = useState({
     stack: "Full Stack",
     os: "MacOS",
     hoursCoded: 4,
     theme: "Dark",
   });
+
+  const metrics = calculateDeveloperMetrics(config.hoursCoded, config.stack);
+  // --- Idea 2: Developer Config State ---
+
   const [chat, setChat] = useState<{ role: string; content: string }[]>([
     {
       role: "assistant",
-      content: `### Welcome to HolisticAI
-I am your automated health assistance protocol. 
-
-<div class="disclaimer">
-**DISCLAIMER:** I am an AI, not a doctor or professional. My suggestions are for informational purposes only. If you are experiencing a medical emergency, please **call 911** or visit your local hospital immediately.
-</div>
-
-**How can I optimize your wellness today?** Please select a category to begin.`,
+      content: `### SYSTEM INITIALIZED: v1.0.4
+  **HolisticAI** is now online. Monitoring hardware telemetry and biometric strain for **${config.stack}** environment.
+  
+  <div class="disclaimer">
+  **MEDICAL SAFETY PROTOCOL:** I am an AI, not a clinical professional. For emergencies, contact **911** immediately.
+  </div>
+  
+  **SELECT OPTIMIZATION PATHWAY:**`,
     },
   ]);
   // Auto-scroll to bottom
@@ -159,20 +162,46 @@ I am your automated health assistance protocol.
                     <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none leading-relaxed">
                       <ReactMarkdown
                         components={{
+                          // 1. Disclaimer styling
                           div: ({ node, className, children, ...props }) => {
                             if (className === "disclaimer") {
                               return (
-                                <div className="my-4 p-4 border border-red-500/20 bg-red-500/5 rounded-xl text-red-600 dark:text-red-400 text-xs italic">
+                                <div className="my-6 p-4 border border-zinc-800 bg-zinc-900/50 rounded-2xl text-zinc-500 text-[10px] uppercase tracking-widest leading-relaxed italic">
                                   {children}
                                 </div>
                               );
                             }
                             return <div {...props}>{children}</div>;
                           },
-                          strong: ({ children }) => (
-                            <strong className="text-red-600 dark:text-red-500 font-bold">
+                          // 2. Headers for Section titles (e.g., ### System Vitals)
+                          h3: ({ children }) => (
+                            <h3 className="text-emerald-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 mt-2 border-b border-emerald-500/10 pb-2">
                               {children}
-                            </strong>
+                            </h3>
+                          ),
+                          // 3. Strong text for "Keys" (no more pure red)
+                          strong: ({ children }) => (
+                            <span className="text-emerald-400 font-mono font-medium">
+                              {children}
+                            </span>
+                          ),
+                          // 4. Paragraphs (control the line height and color)
+                          p: ({ children }) => (
+                            <p className="text-zinc-400 text-xs leading-relaxed mb-4 last:mb-0">
+                              {children}
+                            </p>
+                          ),
+                          // 5. Lists (make them look like "Micro-Scripts")
+                          li: ({ children }) => (
+                            <li className="list-none mb-3 p-3 bg-zinc-900/80 border border-zinc-800 rounded-xl flex gap-3 items-start group hover:border-emerald-500/30 transition-colors">
+                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 animate-pulse" />
+                              <div className="text-[11px] text-zinc-300 font-mono">
+                                {children}
+                              </div>
+                            </li>
+                          ),
+                          ul: ({ children }) => (
+                            <ul className="pl-0 mb-6">{children}</ul>
                           ),
                         }}
                       >
@@ -229,7 +258,7 @@ I am your automated health assistance protocol.
               <div className="space-y-2">
                 <div className="flex justify-between text-[10px]">
                   <span>Focus Capacity</span>
-                  <span>{Math.max(100 - config.hoursCoded * 8, 0)}%</span>
+                  <span>{metrics.focusCapacity}%</span>
                 </div>
                 <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                   <div
@@ -246,9 +275,14 @@ I am your automated health assistance protocol.
                 <div className="flex justify-between text-[10px]">
                   <span>Ocular Strain</span>
                   <span
-                    className={config.hoursCoded > 6 ? "text-orange-500" : ""}
+                    className={
+                      metrics.burnoutRisk === "High" ||
+                      metrics.burnoutRisk === "Critical"
+                        ? "text-orange-500"
+                        : ""
+                    }
                   >
-                    {config.hoursCoded * 12}%
+                    {metrics.ocularStrain}%
                   </span>
                 </div>
                 <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -314,12 +348,21 @@ I am your automated health assistance protocol.
             </div>
           </div>
 
-          <div className="mt-auto p-4 border border-dashed border-emerald-500/20 rounded-2xl">
-            <p className="text-[9px] text-emerald-600/60 leading-relaxed italic">
-              System identifies you as a{" "}
-              <span className="text-emerald-500">{config.stack}</span> engineer.
-              All protocols adjusted for{" "}
-              <span className="text-emerald-500">{config.os}</span> logic.
+          <div className="mt-auto p-4 border border-dashed border-emerald-500/20 rounded-2xl bg-emerald-500/5">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-[9px] font-bold text-emerald-500 uppercase">
+                Status: {metrics.burnoutRisk}
+              </span>
+              <Zap
+                className={`h-3 w-3 ${
+                  metrics.burnoutRisk === "Critical"
+                    ? "text-red-500"
+                    : "text-emerald-500"
+                }`}
+              />
+            </div>
+            <p className="text-[9px] text-emerald-600/80 leading-relaxed italic">
+              {metrics.statusMessage}
             </p>
           </div>
         </aside>

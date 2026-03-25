@@ -1,7 +1,7 @@
 // src/app/page.tsx
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { Activity, Play } from "lucide-react";
+import { Activity } from "lucide-react";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -181,7 +181,7 @@ export default function LandingPage() {
             </h2>
             <p className="text-neutral-500 dark:text-zinc-400 font-mono text-sm leading-relaxed">
               We spend hours refactoring our code, optimizing for 0.1ms
-              performance gains. It's time to apply that same{" "}
+              performance gains. It is time to apply that same{" "}
               <span className="text-orange-500">logic</span> to the most
               important hardware you own: your body.
             </p>

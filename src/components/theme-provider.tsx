@@ -7,25 +7,13 @@ import { type ThemeProviderProps } from "next-themes";
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const [mounted, setMounted] = React.useState(false);
 
-  // Use LayoutEffect to capture the mounting phase before the paint
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  // On the server or during the first client render,
-  // we return a plain fragment to keep the DOM tree stable.
   if (!mounted) {
-    return <div style={{ visibility: "hidden" }}>{children}</div>;
+    return <>{children}</>;
   }
 
-  return (
-    <NextThemesProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      {...props}
-    >
-      {children}
-    </NextThemesProvider>
-  );
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
