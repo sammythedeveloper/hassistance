@@ -1,55 +1,11 @@
-🛸 HolisticAI v2.0.1
-The Health Operating System for Engineers. > Optimizing human hardware through real-time telemetry and RAG-driven intelligence.
-
-⚡ The Problem: "The Silent Memory Leak"
-Software engineering is a high-performance sport with a 100% injury rate. Burnout, Ocular Strain, and Postural Collapse aren't just inconveniences—they are systemic failures in the developer's execution environment.
-
-🧬 The Solution: HolisticAI
-HolisticAI isn't a "health app." It’s a service-centric wellness engine that treats your body like the primary server it is.
-
-Telemetry-Driven AI: Real-time calculation of Focus Capacity, Ocular Strain, and Static Load.
-
-RAG (Retrieval-Augmented Generation): AI responses are grounded in a private vector-style knowledge base of musculoskeletal protocols. No hallucinations. Just fixes.
-
-Context-Aware Logic: Dynamic intent switching between Diagnostic Mode (symptoms) and Consultation Mode (architectural "why").
-
-🛠️ Architecture & Stack
-Designed for the Universe Metamorphosis (Next.js/Node/TypeScript).
-
-Code snippet
-graph LR
-  A[User Telemetry] --> B(Metrics Engine)
-  B --> C{RAG Controller}
-  D[(Knowledge Base)] --> C
-  C --> E[Gemini 2.5 Flash]
-  E --> F[Human-First UI]
-Runtime: Node.js 22+ / Next.js 15 (App Router)
-
-Database: PostgreSQL + Prisma ORM (Relational persistence for session logs)
-
-Inference: Google Generative AI (Gemini) with behavioral heuristics
-
-Infrastructure: Containerized via Docker for seamless environment parity
-
-🚀 Performance Features
-Zero-Latent UI: High-fidelity terminal aesthetic with ReactMarkdown styling.
-
-Observability Sidebar: Mimics enterprise monitoring tools (Grafana/Datadog) for human vitals.
-
-Security Sandbox: Hard-coded guardrails preventing prompt injection and persona drift.
-
-🏁 Quick Start
-Bash
-# Clone the source
-git clone https://github.com/sammythedeveloper/holistic-ai.git
-
-# Initialize environment
+HolisticAI v2.0.1The Health Operating System for Engineers.Optimizing human hardware through real-time telemetry and RAG-driven intelligence.⚡ The MissionSoftware engineering is a high-performance sport with a high burnout rate. HolisticAI treats your body like the primary server it is, identifying "Systemic Memory Leaks" like postural collapse and ocular strain before they crash your sprint.🧬 Core ArchitectureBuilt with a Service-Centric mindset, the platform decouples AI inference from the business logic and telemetry calculation engines.ComponentTechnical ImplementationRuntimeNext.js 15 (App Router) + Node.js 22IntelligenceGemini 2.5 Flash + Custom RAG PipelinePersistencePostgreSQL + Prisma ORMObservabilityReal-time Telemetry Engine (Focus/Ocular/Load)InfrastructureDocker Compose for Local-to-Cloud Parity🚀 Key Features1. RAG-Powered IntelligenceUnlike standard LLMs, our AI responses are grounded in a Private Vector-Style Knowledge Base. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is peer-reviewed and accurate.2. Developer Telemetry DashboardA dedicated observability sidebar (inspired by Grafana) that calculates:Focus Capacity: Real-time cognitive throughput tracking.Ocular Strain: Visual fatigue detection based on session intensity.Static Load: Postural deviation monitoring for the "Developer Slump."3. Dynamic Intent SwitchingThe AI mentor transitions seamlessly between Diagnostic Mode (identifying pain) and Consultation Mode (architectural explanation) using advanced behavioral heuristics.🛠️ Getting Started1. Initialize EnvironmentBashgit clone https://github.com/sammythedeveloper/holistic-ai.git
+cd holistic-ai
 cp .env.example .env
-
-# Spin up the stack
+2. Boot the SystemBash# Spin up Dockerized DB and sync Prisma
 docker-compose up -d && npx prisma db push
 
-# Start the dev server
+# Launch the Dev Server
 npm run dev
+🛡️ Security & GuardrailsPrompt Injection Defense: Hardened "Security Sandbox" to prevent persona drift.Bias Mitigation: Strict neutrality filters for protected identity categories.Medical Safety: Integrated disclaimers ensuring AI operates as a mentor, not a physician.
 
 P.S - This is a scalable application i will be pushing more freatures as i am working and making the ai more personalized.
