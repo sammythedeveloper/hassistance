@@ -37,7 +37,6 @@ interface ConfigPanelProps {
 function ConfigPanel({ config, setConfig, metrics }: ConfigPanelProps) {
   return (
     <div className="space-y-6">
-      {/* System Load Stats */}
       <div className="p-5 bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 rounded-[2rem] shadow-sm space-y-6">
         <div className="flex items-center justify-between">
           <span className="text-[10px] uppercase tracking-widest text-zinc-400">
@@ -79,7 +78,6 @@ function ConfigPanel({ config, setConfig, metrics }: ConfigPanelProps) {
         </div>
       </div>
 
-      {/* Hardware Configuration */}
       <div className="p-5 bg-zinc-100/50 dark:bg-zinc-900/50 border border-neutral-200 dark:border-zinc-800 rounded-[2rem] space-y-4">
         <div className="flex items-center gap-2 text-[10px] text-zinc-400 uppercase tracking-tighter">
           <Cpu className="h-3 w-3" /> Hardware Config
@@ -123,6 +121,7 @@ function ConfigPanel({ config, setConfig, metrics }: ConfigPanelProps) {
     </div>
   );
 }
+
 // --- 3. MAIN PAGE ---
 export default function DemoPage() {
   const [issue, setIssue] = useState("");
@@ -143,7 +142,7 @@ export default function DemoPage() {
   const [chat, setChat] = useState<{ role: string; content: string }[]>([
     {
       role: "assistant",
-      content: `### SYSTEM INITIALIZED: v1.0.4\n**HolisticAI** is online for **${config.stack}** environment.\n\n<div class="disclaimer">\n**MEDICAL SAFETY PROTOCOL:** I am an AI, not a clinical professional. For emergencies, contact **911** immediately.\n</div>\n\n**SELECT OPTIMIZATION PATHWAY:**`,
+      content: `### SYSTEM ONLINE\n**HolisticAI** is active. Environment: **${config.stack}**.\n\nSelect an optimization pathway below to begin telemetry sync.`,
     },
   ]);
 
@@ -156,7 +155,10 @@ export default function DemoPage() {
     setCategory(selectedCat);
     setChat((prev) => [
       ...prev,
-      { role: "user", content: `Protocol selected: ${selectedCat} Wellness.` },
+      {
+        role: "user",
+        content: `Initializing ${selectedCat} Wellness Protocol.`,
+      },
     ]);
   };
 
@@ -166,7 +168,8 @@ export default function DemoPage() {
     setChat([
       {
         role: "assistant",
-        content: "### Protocol Reset.\nSelect a new wellness category.",
+        content:
+          "### Protocol Reset.\nStanding by for new wellness category selection.",
       },
     ]);
   };
@@ -284,25 +287,25 @@ export default function DemoPage() {
                   }`}
                 >
                   <div
-                    className={`max-w-[90%] px-5 py-4 rounded-3xl shadow-sm ${
+                    className={`max-w-[90%] px-6 py-5 rounded-[2rem] shadow-sm ${
                       msg.role === "user"
                         ? "bg-black dark:bg-white text-white dark:text-black rounded-tr-none"
                         : "bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 text-neutral-800 dark:text-zinc-200 rounded-tl-none"
                     }`}
                   >
-                    <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none leading-relaxed text-xs">
+                    <div className="w-full text-left text-[13px] leading-relaxed">
                       <ReactMarkdown
                         components={{
                           div: ({ className, children }) =>
                             className === "disclaimer" ? (
-                              <div className="my-6 p-4 border border-zinc-800 bg-zinc-900/50 rounded-2xl text-zinc-500 text-[10px] uppercase tracking-widest leading-relaxed italic">
+                              <div className="my-4 p-3 border-l-2 border-emerald-500 bg-emerald-500/5 text-zinc-500 text-[10px] uppercase tracking-wider leading-normal">
                                 {children}
                               </div>
                             ) : (
-                              <div>{children}</div>
+                              <div className="w-full">{children}</div>
                             ),
                           h3: ({ children }) => (
-                            <h3 className="text-emerald-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 mt-2 border-b border-emerald-500/10 pb-2">
+                            <h3 className="text-emerald-500 text-[11px] font-bold uppercase tracking-[0.2em] mb-4 mt-2">
                               {children}
                             </h3>
                           ),
@@ -312,18 +315,30 @@ export default function DemoPage() {
                             </span>
                           ),
                           p: ({ children }) => (
-                            <p className="text-zinc-400 text-xs leading-relaxed mb-4 last:mb-0">
+                            <p className="text-zinc-400 mb-4 last:mb-0 w-full break-words leading-relaxed">
                               {children}
                             </p>
                           ),
                           li: ({ children }) => (
-                            <li className="list-none mb-3 p-3 bg-zinc-900/80 border border-zinc-800 rounded-xl flex gap-3 items-start group hover:border-emerald-500/30 transition-colors text-[11px] text-zinc-300 font-mono">
-                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 animate-pulse" />
-                              {children}
+                            <li className="flex gap-2 items-start mb-3 text-zinc-400 group">
+                              <span className="text-emerald-500 font-bold">
+                                ›
+                              </span>
+                              <div className="flex-1 text-[12px] font-mono leading-normal break-words">
+                                {children}
+                              </div>
                             </li>
                           ),
                           ul: ({ children }) => (
-                            <ul className="pl-0 mb-6">{children}</ul>
+                            <ul className="pl-0 mb-6 w-full flex flex-col items-stretch">
+                              {children}
+                            </ul>
+                          ),
+                          hr: () => <hr className="border-zinc-800 my-6" />,
+                          code: ({ children }) => (
+                            <code className="bg-zinc-800 text-[10px] px-1.5 py-0.5 rounded text-zinc-400 font-mono border border-zinc-700">
+                              {children}
+                            </code>
                           ),
                         }}
                       >
