@@ -1,13 +1,16 @@
 <div align="center">
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Satellite%20Antenna.png" width="50" height="50" /> <br/> HolisticAI `v2.0.1`
-**The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry and RAG-driven intelligence.*
+# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Satellite%20Antenna.png" width="40" height="40" /> HolisticAI `v2.0.1`
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![Gemini](https://img.shields.io/badge/Gemini_2.5-AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://deepmind.google/technologies/gemini/)
-[![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+**The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry, RAG-driven intelligence, and automated CI/CD pipelines.*
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Aiven_Postgres-FF4C4C?style=for-the-badge&logo=aiven&logoColor=white" />
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+</div>
 
 ---
 
@@ -18,30 +21,32 @@ Software engineering is a high-performance sport. **Burnout, Ocular Strain, and 
 
 ---
 
-## 🧬 Core Architecture & Stack
-Designed for high-scale observability, mirroring the **Universe/Ticketmaster** service-centric metamorphosis.
+## 🏗️ System Architecture & Infrastructure
+Designed for high-scale observability and seamless continuous delivery, mirroring the **Universe/Ticketmaster** service-centric metamorphosis.
 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
 | **Runtime** | `Node.js 22` + `Next.js 15` | High-performance full-stack execution |
-| **Intelligence** | `Gemini 2.5 Flash` + `RAG` | Grounded, medical-grade AI protocols |
-| **Data** | `PostgreSQL` + `Prisma` | Relational persistence for telemetry logs |
-| **DevOps** | `Docker Compose` | Local-to-Cloud environment parity |
+| **Managed DB** | `Aiven PostgreSQL` | Production-grade relational persistence for telemetry logs |
+| **CI/CD** | `GitHub Actions` | Automated linting, type-checking, and deployment triggers |
+| **Inference** | `Gemini 2.5 Flash` + `RAG` | Grounded, medical-grade AI protocols via private KB |
+| **DevOps** | `Docker Compose` | Local environment parity for rapid prototyping |
 
 ---
 
 ## 🚀 Key Features
 
-### 🟢 RAG-Powered Intelligence
-AI responses are grounded in a **Private Knowledge Base**. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is peer-reviewed and accurate.
+### 🟢 Automated CI/CD Pipeline
+Integrated **GitHub Actions** workflows to ensure code quality and system stability. Every PR triggers automated linting and type-safety checks before merging to `main`.
 
-### 🔵 Developer Telemetry Dashboard
-A dedicated observability sidebar that calculates:
-* **Focus Capacity:** Real-time cognitive throughput tracking.
-* **Ocular Strain:** Visual fatigue detection based on session intensity.
-* **Static Load:** Postural deviation monitoring for the "Developer Slump."
+### 🔵 Production-Grade Data (Aiven)
+Leveraged **Aiven** for a fully managed **PostgreSQL** instance, ensuring high availability for critical telemetry storage and seamless **Prisma** migrations across local and cloud environments.
+
+### 🟡 RAG-Powered Intelligence
+Unlike standard LLMs, AI responses are grounded in a **Private Vector-Style Knowledge Base**. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is accurate and peer-reviewed.
 
 ---
+
 
 ## 🛠️ Installation & Setup
 
