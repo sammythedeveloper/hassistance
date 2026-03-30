@@ -1,11 +1,59 @@
-HolisticAI v2.0.1The Health Operating System for Engineers.Optimizing human hardware through real-time telemetry and RAG-driven intelligence.⚡ The MissionSoftware engineering is a high-performance sport with a high burnout rate. HolisticAI treats your body like the primary server it is, identifying "Systemic Memory Leaks" like postural collapse and ocular strain before they crash your sprint.🧬 Core ArchitectureBuilt with a Service-Centric mindset, the platform decouples AI inference from the business logic and telemetry calculation engines.ComponentTechnical ImplementationRuntimeNext.js 15 (App Router) + Node.js 22IntelligenceGemini 2.5 Flash + Custom RAG PipelinePersistencePostgreSQL + Prisma ORMObservabilityReal-time Telemetry Engine (Focus/Ocular/Load)InfrastructureDocker Compose for Local-to-Cloud Parity🚀 Key Features1. RAG-Powered IntelligenceUnlike standard LLMs, our AI responses are grounded in a Private Vector-Style Knowledge Base. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is peer-reviewed and accurate.2. Developer Telemetry DashboardA dedicated observability sidebar (inspired by Grafana) that calculates:Focus Capacity: Real-time cognitive throughput tracking.Ocular Strain: Visual fatigue detection based on session intensity.Static Load: Postural deviation monitoring for the "Developer Slump."3. Dynamic Intent SwitchingThe AI mentor transitions seamlessly between Diagnostic Mode (identifying pain) and Consultation Mode (architectural explanation) using advanced behavioral heuristics.🛠️ Getting Started1. Initialize EnvironmentBashgit clone https://github.com/sammythedeveloper/holistic-ai.git
-cd holistic-ai
-cp .env.example .env
-2. Boot the SystemBash# Spin up Dockerized DB and sync Prisma
+<div align="center">
+
+# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Satellite%20Antenna.png" width="50" height="50" /> <br/> HolisticAI `v2.0.1`
+**The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry and RAG-driven intelligence.*
+
+[![Next.js](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Gemini](https://img.shields.io/badge/Gemini_2.5-AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://deepmind.google/technologies/gemini/)
+[![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+
+---
+
+### ⚡ The Problem: "The Silent Memory Leak"
+Software engineering is a high-performance sport. **Burnout, Ocular Strain, and Postural Collapse** aren't just inconveniences—they are systemic failures in the developer's execution environment. 
+
+</div>
+
+---
+
+## 🧬 Core Architecture & Stack
+Designed for high-scale observability, mirroring the **Universe/Ticketmaster** service-centric metamorphosis.
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Runtime** | `Node.js 22` + `Next.js 15` | High-performance full-stack execution |
+| **Intelligence** | `Gemini 2.5 Flash` + `RAG` | Grounded, medical-grade AI protocols |
+| **Data** | `PostgreSQL` + `Prisma` | Relational persistence for telemetry logs |
+| **DevOps** | `Docker Compose` | Local-to-Cloud environment parity |
+
+---
+
+## 🚀 Key Features
+
+### 🟢 RAG-Powered Intelligence
+AI responses are grounded in a **Private Knowledge Base**. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is peer-reviewed and accurate.
+
+### 🔵 Developer Telemetry Dashboard
+A dedicated observability sidebar that calculates:
+* **Focus Capacity:** Real-time cognitive throughput tracking.
+* **Ocular Strain:** Visual fatigue detection based on session intensity.
+* **Static Load:** Postural deviation monitoring for the "Developer Slump."
+
+---
+
+## 🛠️ Installation & Setup
+
+```bash
+# 1. Clone & Setup
+git clone [https://github.com/sammythedeveloper/holistic-ai.git](https://github.com/sammythedeveloper/holistic-ai.git)
+cd holistic-ai && cp .env.example .env
+
+# 2. Boot the Stack
 docker-compose up -d && npx prisma db push
 
-# Launch the Dev Server
+# 3. Launch
 npm run dev
-🛡️ Security & GuardrailsPrompt Injection Defense: Hardened "Security Sandbox" to prevent persona drift.Bias Mitigation: Strict neutrality filters for protected identity categories.Medical Safety: Integrated disclaimers ensuring AI operates as a mentor, not a physician.
 
-P.S - This is a scalable application i will be pushing more freatures as i am working and making the ai more personalized.
+P.S - This is a scalable application and right now its on its v.0.1 , i will be pushing more freatures as i am working and making the ai more personalized.
