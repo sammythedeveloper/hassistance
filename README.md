@@ -62,3 +62,4 @@ docker-compose up -d && npx prisma db push
 npm run dev
 
 P.S - This is a scalable application and right now its on its v.0.1 , i will be pushing more freatures as i am working and making the ai more personalized.
+Case study - https://www.notion.so/Holistic-Ai-Project-case-study-a63bff74be2d4ffcad288959557886e4?source=copy_link
