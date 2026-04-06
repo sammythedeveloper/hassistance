@@ -1,37 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Satellite%20Antenna.png" width="40" height="40" /> HolisticAI `v2.0.1`
 
-First, run the development server:
+**The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry, RAG-driven intelligence, and automated CI/CD pipelines.*
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Aiven_Postgres-FF4C4C?style=for-the-badge&logo=aiven&logoColor=white" />
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+</div>
+
+---
+
+### ⚡ The Problem: "The Silent Memory Leak"
+Software engineering is a high-performance sport. **Burnout, Ocular Strain, and Postural Collapse** aren't just inconveniences—they are systemic failures in the developer's execution environment. 
+
+</div>
+
+---
+
+## 🏗️ System Architecture & Infrastructure
+Designed for high-scale observability and seamless continuous delivery, mirroring the **Universe/Ticketmaster** service-centric metamorphosis.
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Runtime** | `Node.js 22` + `Next.js 15` | High-performance full-stack execution |
+| **Managed DB** | `Aiven PostgreSQL` | Production-grade relational persistence for telemetry logs |
+| **CI/CD** | `GitHub Actions` | Automated linting, type-checking, and deployment triggers |
+| **Inference** | `Gemini 2.5 Flash` + `RAG` | Grounded, medical-grade AI protocols via private KB |
+| **DevOps** | `Docker Compose` | Local environment parity for rapid prototyping |
+
+---
+
+## 🚀 Key Features
+
+### 🟢 Automated CI/CD Pipeline
+Integrated **GitHub Actions** workflows to ensure code quality and system stability. Every PR triggers automated linting and type-safety checks before merging to `main`.
+
+### 🔵 Production-Grade Data (Aiven)
+Leveraged **Aiven** for a fully managed **PostgreSQL** instance, ensuring high availability for critical telemetry storage and seamless **Prisma** migrations across local and cloud environments.
+
+### 🟡 RAG-Powered Intelligence
+Unlike standard LLMs, AI responses are grounded in a **Private Vector-Style Knowledge Base**. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is accurate and peer-reviewed.
+
+---
+
+
+## 🛠️ Installation & Setup
 
 ```bash
+# 1. Clone & Setup
+git clone [https://github.com/sammythedeveloper/holistic-ai.git](https://github.com/sammythedeveloper/holistic-ai.git)
+cd holistic-ai && cp .env.example .env
+
+# 2. Boot the Stack
+docker-compose up -d && npx prisma db push
+
+# 3. Launch
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+P.S - This is a scalable application and right now its on its v.0.1 , i will be pushing more freatures as i am working and making the ai more personalized.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# hassistance
