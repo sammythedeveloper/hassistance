@@ -3,11 +3,14 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
+  // REQUIRED: Tells Prisma to generate a client compatible with AWS Amplify's Linux
+  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  // REMOVE the url line entirely!
+  // REQUIRED: Links Prisma to the DATABASE_URL you set in the Amplify Console
+  url      = env("DATABASE_URL")
 }
 
 model Conversation {
