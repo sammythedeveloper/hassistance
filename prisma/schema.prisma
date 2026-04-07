@@ -3,27 +3,27 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
-  // REQUIRED: Tells Prisma to generate a client compatible with AWS Amplify's Linux
+  // This is the ONLY addition needed for AWS—it won't break Vercel!
   binaryTargets   = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  // REQUIRED: Links Prisma to the DATABASE_URL you set in the Amplify Console
+  // Instead of removing it, we link it to the environment variable
   url      = env("DATABASE_URL")
 }
 
 model Conversation {
   id        String    @id @default(cuid())
   sessionId String    @unique
-  category  String    // Physical, Mental, Emotional, or Environmental
+  category  String    
   createdAt DateTime  @default(now())
   messages  Message[]
 }
 
 model Message {
   id             String       @id @default(cuid())
-  role           String       // "user" or "assistant"
+  role           String       
   content        String       @db.Text
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
