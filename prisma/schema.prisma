@@ -3,14 +3,13 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
-  // This is the ONLY addition needed for AWS—it won't break Vercel!
+  // This is the ONLY thing we are adding for AWS
   binaryTargets   = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  // Instead of removing it, we link it to the environment variable
-  url      = env("DATABASE_URL")
+  // Keep this empty like you had it, but don't comment it out
 }
 
 model Conversation {
