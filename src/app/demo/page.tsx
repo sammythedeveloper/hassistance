@@ -404,7 +404,7 @@ export default function DemoPage() {
         </aside>
       </div>
 
-      <footer className="p-4 border-t border-neutral-100 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+      <div className="p-4 border-t border-neutral-100 dark:border-zinc-800 bg-white dark:bg-zinc-950">
         <form
           onSubmit={handleSubmit}
           className="max-w-3xl mx-auto relative flex items-center"
@@ -430,9 +430,9 @@ export default function DemoPage() {
           </Button>
         </form>
         <p className="text-[10px] text-center text-neutral-400 dark:text-zinc-600 mt-3 tracking-widest uppercase">
-          Holistic AI Assistant • Optimized for {config.stack}
+          Holistic AI Assistant 
         </p>
-      </footer>
+      </div>
     </div>
   );
 }
