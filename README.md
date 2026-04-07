@@ -27,6 +27,7 @@ Designed for high-scale observability and seamless continuous delivery, mirrorin
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
 | **Runtime** | `Node.js 22` + `Next.js 15` | High-performance full-stack execution |
+| **Hosting** | `AWS Amplify` | Managed server side rendering deployment and CI/CD orchestration |
 | **Managed DB** | `Aiven PostgreSQL` | Production-grade relational persistence for telemetry logs |
 | **CI/CD** | `GitHub Actions` | Automated linting, type-checking, and deployment triggers |
 | **Inference** | `Gemini 2.5 Flash` + `RAG` | Grounded, medical-grade AI protocols via private KB |
