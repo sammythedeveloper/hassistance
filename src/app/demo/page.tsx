@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { handleHealthConsultation } from "@/actions/chat";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -407,9 +407,9 @@ export default function DemoPage() {
       <div className="p-4 border-t border-neutral-100 dark:border-zinc-800 bg-white dark:bg-zinc-950">
         <form
           onSubmit={handleSubmit}
-          className="max-w-3xl mx-auto relative flex items-center"
+          className="max-w-3xl mx-auto relative flex items-end" // Changed items-center to items-end
         >
-          <Input
+          <Textarea
             disabled={!category}
             placeholder={
               category
@@ -418,19 +418,19 @@ export default function DemoPage() {
             }
             value={issue}
             onChange={(e) => setIssue(e.target.value)}
-            className="pr-14 py-7 rounded-2xl bg-neutral-50 dark:bg-zinc-900 border-neutral-200 dark:border-zinc-800 focus-visible:ring-emerald-500"
+            className="min-h-[60px] resize-none pr-14 py-4 rounded-2xl bg-neutral-50 dark:bg-zinc-900 border-neutral-200 dark:border-zinc-800 focus-visible:ring-emerald-500"
           />
           <Button
             type="submit"
             disabled={loading || !issue || !category}
             size="icon"
-            className="absolute right-2 rounded-xl h-10 w-10 bg-emerald-600 hover:bg-emerald-700"
+            className="absolute right-2 bottom-2 rounded-xl h-10 w-10 bg-emerald-600 hover:bg-emerald-700" // Aligned to bottom
           >
             <Send className="h-5 w-5 text-white" />
           </Button>
         </form>
         <p className="text-[10px] text-center text-neutral-400 dark:text-zinc-600 mt-3 tracking-widest uppercase">
-          Holistic AI Assistant 
+          Holistic AI Assistant
         </p>
       </div>
     </div>
