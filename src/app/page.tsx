@@ -42,7 +42,7 @@ export default function LandingPage() {
             private, and optimized for dark mode.
           </p>
           <div className="flex items-center gap-6 pt-4">
-            <Link href="/demo">
+            <Link href="/get-started">
               <Button
                 size="lg"
                 className="h-14 px-8 text-lg bg-black dark:bg-white text-white dark:text-black rounded-xl hover:scale-105 transition-transform font-mono"
