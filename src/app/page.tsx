@@ -47,7 +47,7 @@ export default function LandingPage() {
                 size="lg"
                 className="h-14 px-8 text-lg bg-black dark:bg-white text-white dark:text-black rounded-xl hover:scale-105 transition-transform font-mono"
               >
-                Start Here
+               Let&apos;s Begin
               </Button>
             </Link>
           </div>
