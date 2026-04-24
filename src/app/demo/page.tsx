@@ -866,46 +866,6 @@ export default function DemoPage() {
         </div>
       )}
 
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-6 border-b border-neutral-100 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-10">
-        <div className="flex items-center gap-4">
-          <Link href="/">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2">
-            <div className="bg-black dark:bg-white p-1.5 rounded-lg">
-              <Activity className="h-4 w-4 text-white dark:text-black" />
-            </div>
-            <h1 className="font-bold tracking-tight dark:text-white">
-              HolisticAI
-            </h1>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {category && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleReset}
-              className="text-[10px] text-zinc-500 uppercase tracking-widest"
-            >
-              <RefreshCcw className="h-3 w-3 mr-2" /> {t.reset}
-            </Button>
-          )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="xl:hidden rounded-full text-emerald-500"
-            onClick={() => setIsSettingsOpen(true)}
-          >
-            <Settings2 className="h-5 w-5" />
-          </Button>
-          <ModeToggle />
-        </div>
-      </header>
-
       <div className="flex flex-1 overflow-hidden relative">
         <main className="flex-1 overflow-hidden bg-neutral-50/30 dark:bg-zinc-950/50 relative">
           <ScrollArea className="h-full px-4 py-8">
@@ -979,49 +939,50 @@ export default function DemoPage() {
                   </div>
                 </div>
               ))}
-        {!category && (
-  // Remove or widen the parent container (max-w-...) if it feels too narrow
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 py-6 w-full">
-    {Object.entries(t.categories).map(([key, label], index) => {
-      const config = categoryConfig[key as keyof typeof categoryConfig];
-      const Icon = config.icon;
+              {!category && (
+                // Remove or widen the parent container (max-w-...) if it feels too narrow
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 py-6 w-full">
+                  {Object.entries(t.categories).map(([key, label], index) => {
+                    const config =
+                      categoryConfig[key as keyof typeof categoryConfig];
+                    const Icon = config.icon;
 
-      return (
-        <button
-          key={key}
-          onClick={() => handleCategorySelect(key)}
-          className="group relative flex flex-col justify-between p-5
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => handleCategorySelect(key)}
+                        className="group relative flex flex-col justify-between p-5
             aspect-square sm:aspect-square lg:aspect-auto lg:h-40
             bg-white dark:bg-zinc-900 
             border border-zinc-200 dark:border-zinc-800 
             rounded-2xl transition-all duration-300
             hover:border-emerald-500/50 hover:bg-emerald-500/[0.02]
             text-left" // Ensure text is left-aligned, not centered
-        >
-          {/* Header area */}
-          <div className="flex justify-between items-start">
-            <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 group-hover:text-emerald-500 transition-colors">
-              <Icon size={18} strokeWidth={1.5} />
-            </div>
-            <span className="text-[10px] font-mono text-zinc-400 group-hover:text-emerald-500/70 transition-colors">
-              0{index + 1}
-            </span>
-          </div>
+                      >
+                        {/* Header area */}
+                        <div className="flex justify-between items-start">
+                          <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 group-hover:text-emerald-500 transition-colors">
+                            <Icon size={18} strokeWidth={1.5} />
+                          </div>
+                          <span className="text-[10px] font-mono text-zinc-400 group-hover:text-emerald-500/70 transition-colors">
+                            0{index + 1}
+                          </span>
+                        </div>
 
-          {/* Label area */}
-          <div className="flex flex-col">
-            <span className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">
-              {label}
-            </span>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mt-1">
-              {config.desc}
-            </span>
-          </div>
-        </button>
-      );
-    })}
-  </div>
-)}
+                        {/* Label area */}
+                        <div className="flex flex-col">
+                          <span className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">
+                            {label}
+                          </span>
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mt-1">
+                            {config.desc}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 p-4 rounded-3xl rounded-tl-none flex gap-1">

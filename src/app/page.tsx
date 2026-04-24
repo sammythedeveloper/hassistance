@@ -7,22 +7,6 @@ import Link from "next/link";
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white transition-colors duration-500">
-      <nav className="flex items-center justify-between px-10 py-6 max-w-[1400px] mx-auto">
-        <div className="flex items-center gap-2">
-          <Activity className="h-6 w-6 text-black dark:text-white" />
-          <span className="text-xl tracking-tighter font-mono ">
-            HolisticAI
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <ModeToggle />
-          <Link href="/demo">
-            <Button className="bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-lg px-6 transition-all font-mono ">
-              Try for free
-            </Button>
-          </Link>
-        </div>
-      </nav>
       {/* --- Hero Section --- */}
       <main className="max-w-[1400px] mx-auto px-10 pt-20 pb-32 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
         <div className="space-y-8">
@@ -47,7 +31,7 @@ export default function LandingPage() {
                 size="lg"
                 className="h-14 px-8 text-lg bg-black dark:bg-white text-white dark:text-black rounded-xl hover:scale-105 transition-transform font-mono"
               >
-               Let&apos;s Begin
+                Let&apos;s Begin
               </Button>
             </Link>
           </div>
@@ -198,24 +182,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <footer className="max-w-[1400px] mx-auto px-10 py-12 border-t border-neutral-100 dark:border-zinc-900 font-mono">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2 opacity-60">
-            <Activity className="h-4 w-4" />
-            <span className="text-sm tracking-tighter">HolisticAI</span>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-8 text-[11px] uppercase tracking-widest text-neutral-500 dark:text-zinc-500">
-            <Link href="/about" className="hover:text-emerald-500 transition-colors">About Project</Link>
-            <Link href="/privacy" className="hover:text-emerald-500 transition-colors">Privacy & Data</Link>
-            <Link href="/terms" className="hover:text-emerald-500 transition-colors">Terms of Use</Link>
-          </div>
-
-          <div className="text-[10px] text-neutral-400 dark:text-zinc-600">
-            © 2026 / Build 0.1.0
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
