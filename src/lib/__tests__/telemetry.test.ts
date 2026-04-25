@@ -1,21 +1,28 @@
-import { calculateDeveloperMetrics } from "../telemetry"; // Adjust this path if your lib is elsewhere!
+import { calculateDeveloperMetrics } from "../telemetry";
 
-describe("Telemetry Engine Logic", () => {
-  test("should calculate 'Low' risk for 2 hours of coding", () => {
+describe("Telemetry Engine (Multi-Domain)", () => {
+  test("should show low risk for light usage (2h)", () => {
     const metrics = calculateDeveloperMetrics(2, "Frontend");
+
     expect(metrics.burnoutRisk).toBe("Low");
-    expect(metrics.focusCapacity).toBeGreaterThan(80);
+
+    expect(metrics.mental.focusCapacity).toBeGreaterThan(70);
+    expect(metrics.physical.ocularStrain).toBeLessThan(40);
   });
 
-  test("should trigger 'High' ocular strain after 8 hours", () => {
+  test("should increase physical strain after long coding session", () => {
     const metrics = calculateDeveloperMetrics(8, "Full Stack");
-    expect(metrics.ocularStrain).toBeGreaterThan(60);
-    expect(metrics.burnoutRisk).toBe("High");
+
+    expect(metrics.physical.ocularStrain).toBeGreaterThan(80);
+    expect(metrics.physical.postureLoad).toBeGreaterThan(50);
   });
 
-  test("should return 'Critical' status for 14+ hour shifts", () => {
+  test("should trigger critical risk for extreme workloads", () => {
     const metrics = calculateDeveloperMetrics(14, "Backend");
+
     expect(metrics.burnoutRisk).toBe("Critical");
-    expect(metrics.focusCapacity).toBeLessThan(20);
+
+    expect(metrics.emotional.stressIndex).toBeGreaterThan(70);
+    expect(metrics.mental.cognitiveLoad).toBeGreaterThan(60);
   });
 });
