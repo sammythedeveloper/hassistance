@@ -2,7 +2,12 @@
 
 export interface Protocol {
   id: string;
-  metric: "ocularStrain" | "hoursCoded" | "focusCapacity";
+  metric:
+    | "ocularStrain"
+    | "hoursCoded"
+    | "focusCapacity"
+    | "imposterScore"
+    | "contextSwitches";
   threshold: number;
   condition: "above" | "below";
   title: string;
@@ -40,5 +45,25 @@ export const KNOWLEDGE_BASE: Protocol[] = [
     content:
       "High mental entropy detected. Switch to a 'Non-Visual' task for 5 minutes (e.g., hydration or standing stretch). This allows the Default Mode Network to re-initialize and lowers cortisol spikes.",
     source: "Behavioral Ergonomics Whitepaper 2026",
+  },
+  {
+    id: "imposter-syndrome-hunt",
+    metric: "imposterScore",
+    threshold: 8,
+    condition: "above",
+    title: "Job Hunt Resilience Protocol",
+    content:
+      "High imposter signals during job hunting. Pivot from 'Outcome Focus' (getting hired) to 'Process Focus' (improving the build).",
+    source: "Mental Health Engineering 2026",
+  },
+  {
+    id: "devops-context-limit",
+    metric: "contextSwitches",
+    threshold: 10,
+    condition: "above",
+    title: "DevOps Context Collapse",
+    content:
+      "High context switching detected. Implement a 'No-Meeting' 4-hour block to consolidate operational tasks.",
+    source: "Platform Engineering Best Practices",
   },
 ];

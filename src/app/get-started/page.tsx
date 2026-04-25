@@ -61,10 +61,10 @@ export default function GetStarted() {
         {/* Selection Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {Object.entries(categories).map(([key, { icon: Icon, desc }]) => (
-            <button
+            <Link
               key={key}
-              onClick={() => router.push(`/demo?category=${key.toLowerCase()}`)}
-              className="p-6 border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm rounded-2xl text-left hover:border-emerald-500 hover:bg-emerald-500/5 transition-all group"
+              href={`/demo/${key.toLowerCase()}`} // This matches your new [category] folder
+              className="p-6 border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm rounded-2xl text-left hover:border-emerald-500 hover:bg-emerald-500/5 transition-all group block"
             >
               <Icon className="w-6 h-6 mb-4 text-emerald-500" />
               <div className="font-bold text-lg mb-2">{key}</div>
@@ -72,7 +72,7 @@ export default function GetStarted() {
                 {desc}
               </div>
               <ChevronRight className="w-4 h-4 mt-4 text-zinc-400 group-hover:text-emerald-500 transition-colors" />
-            </button>
+            </Link>
           ))}
         </div>
 
@@ -81,7 +81,7 @@ export default function GetStarted() {
           {[
             {
               title: "Root Cause Analysis",
-              body: "We don't offer generic pills. The system runs diagnostic queries on your daily flow to identify the actual source of your fatigue.",
+              body: "No offer generic pills. The system runs diagnostic queries on your daily flow to identify the actual source of your fatigue.",
             },
             {
               title: "Low-Latency Logic",
@@ -89,7 +89,7 @@ export default function GetStarted() {
             },
             {
               title: "Encrypted Context",
-              body: "Zero data leakage. Your physical and mental telemetry is processed locally or within an encrypted tunnel.",
+              body: "Zero data leakage. Your physical and mental telemetry is processed locally within an encrypted tunnel.",
             },
           ].map((item, i) => (
             <div key={i} className="space-y-2">
