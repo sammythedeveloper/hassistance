@@ -5,12 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set.");
-}
+const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 
 function sanitizeConnectionStringForExplicitSsl(rawUrl: string): string {
   try {
@@ -50,30 +45,52 @@ function loadDatabaseCaCertificate(): string | undefined {
   }
 }
 
-const ca = loadDatabaseCaCertificate();
-const ssl = ca
-  ? {
-      rejectUnauthorized: true,
-      ca,
-      minVersion: "TLSv1.2" as const,
-    }
-  : undefined;
+function createPrismaClient(): PrismaClient {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not set.");
+  }
 
-const effectiveConnectionString = ca
-  ? sanitizeConnectionStringForExplicitSsl(connectionString)
-  : connectionString;
+  const ca = loadDatabaseCaCertificate();
+  const ssl = ca
+    ? {
+        rejectUnauthorized: true,
+        ca,
+        minVersion: "TLSv1.2" as const,
+      }
+    : undefined;
 
-const pool = new Pool({
-  connectionString: effectiveConnectionString,
-  ssl,
-});
-const adapter = new PrismaPg(pool);
+  const effectiveConnectionString = ca
+    ? sanitizeConnectionStringForExplicitSsl(connectionString)
+    : connectionString;
 
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    adapter, // This tells Prisma HOW to connect to Postgres
+  const pool = new Pool({
+    connectionString: effectiveConnectionString,
+    ssl,
+  });
+  const adapter = new PrismaPg(pool);
+
+  return new PrismaClient({
+    adapter,
     log: ["query"],
   });
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+function getPrismaClient(): PrismaClient {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = createPrismaClient();
+  }
+  return globalForPrisma.prisma;
+}
+
+// Lazy proxy avoids DATABASE_URL checks during module import (important for CI build).
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop, receiver) {
+    const client = getPrismaClient();
+    const value = Reflect.get(client as object, prop, receiver);
+    if (typeof value === "function") {
+      return value.bind(client);
+    }
+    return value;
+  },
+});
