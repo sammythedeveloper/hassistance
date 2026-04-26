@@ -1,7 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { Activity } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/demo/")) {
+    return null;
+  }
+
   return (
     <footer className="mx-auto px-10 py-12 border-t border-neutral-100 dark:border-zinc-900 font-mono w-full bg-white dark:bg-zinc-950 ">
       <div className="flex flex-col md:flex-row justify-between items-center gap-6">

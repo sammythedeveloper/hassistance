@@ -1,27 +1,37 @@
-import { KNOWLEDGE_BASE, Protocol, Category } from "./knowledge-base";
-import { TelemetryMetrics } from "./telemetry";
+// src/lib/retrieval.ts
 
-function getSignalValue(
+import { KNOWLEDGE_BASE, Protocol } from "./knowledge-base";
+import { TelemetryMetrics, Category } from "./telemetry";
+
+/**
+ * Safely extracts a metric value from telemetry
+ */
+function getMetricValue(
   metrics: TelemetryMetrics,
   category: Category,
-  signal: string
+  metric: string
 ): number {
-  const domain = metrics[category] as Record<string, number>;
-  return domain?.[signal] ?? 0;
+  const domain = metrics[category] as Record<string, number> | undefined;
+  return domain?.[metric] ?? 0;
 }
 
+/**
+ * Scoring logic:
+ * - ABOVE condition → higher value = worse
+ * - BELOW condition → lower value = worse
+ */
 function calculateScore(
   value: number,
   threshold: number,
   condition: "above" | "below"
 ): number {
-  if (condition === "above") {
-    return value - threshold;
-  } else {
-    return threshold - value;
-  }
+  return condition === "above" ? value - threshold : threshold - value;
 }
 
+/**
+ * Main retrieval engine
+ * Returns top relevant protocols for a given category
+ */
 export function retrieveRelevantProtocols(
   metrics: TelemetryMetrics,
   category: Category
@@ -29,19 +39,25 @@ export function retrieveRelevantProtocols(
   const candidates = KNOWLEDGE_BASE.filter((p) => p.category === category);
 
   const scored = candidates
-    .map((p) => {
-      const value = getSignalValue(metrics, p.category, p.signal);
+    .map((protocol) => {
+      const value = getMetricValue(metrics, protocol.category, protocol.metric);
 
-      const score = calculateScore(value, p.threshold, p.condition);
+      const score = calculateScore(
+        value,
+        protocol.threshold,
+        protocol.condition
+      );
 
       return {
-        protocol: p,
+        protocol,
         score,
-        value,
       };
     })
-    .filter((item) => item.score > 0) // only triggered ones
-    .sort((a, b) => b.score - a.score); // highest severity first
+    // only triggered / relevant interventions
+    .filter((item) => item.score > 0)
+    // highest severity first
+    .sort((a, b) => b.score - a.score);
 
+  // return top 3 most relevant interventions
   return scored.slice(0, 3).map((s) => s.protocol);
 }

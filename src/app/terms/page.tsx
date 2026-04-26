@@ -45,11 +45,18 @@ export default function TermsPage() {
               </li>
               <li className="flex gap-4">
                 <span className="text-orange-500 font-bold">[-]</span>
-                <span>The system is provided "as-is" without warranties of any kind regarding the accuracy of AI-generated wellness scripts.</span>
+                <span>
+                  The system is provided &quot;as-is&quot; without warranties
+                  of any kind regarding the accuracy of AI-generated wellness
+                  scripts.
+                </span>
               </li>
               <li className="flex gap-4">
                 <span className="text-orange-500 font-bold">[-]</span>
-                <span>Any attempt to reverse-engineer or "jailbreak" the underlying LLM logic is prohibited.</span>
+                <span>
+                  Any attempt to reverse-engineer or &quot;jailbreak&quot; the
+                  underlying LLM logic is prohibited.
+                </span>
               </li>
             </ul>
           </section>

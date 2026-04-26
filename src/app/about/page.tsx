@@ -13,7 +13,11 @@ export default function AboutPage() {
           SYSTEM_OVERVIEW
         </h1>
         <p className="text-zinc-500 leading-relaxed">
-          HolisticAI is a high-performance wellness protocol designed for engineers who treat their bodies like their hardware. Most health apps are bloated with "slop"—unnecessary features and generic advice. This application refactor wellness into actionable scripts.
+          HolisticAI is a high-performance wellness protocol designed for
+          engineers who treat their bodies like their hardware. Most health
+          apps are bloated with &quot;slop&quot;, unnecessary features and
+          generic advice. This application refactors wellness into actionable
+          scripts.
         </p>
         
         <section className="space-y-4">

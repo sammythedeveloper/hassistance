@@ -1,76 +1,174 @@
 // src/lib/knowledge-base.ts
 
-export type Category = "physical" | "mental" | "emotional" | "environmental";
+import { Category } from "./telemetry";
 
 export interface Protocol {
   id: string;
   category: Category;
-  signal: string;
+
+  metric:
+    | "postureLoad"
+    | "hydrationDeficit"
+    | "circulationRisk"
+    | "focusCapacity"
+    | "cognitiveLoad"
+    | "contextSwitchRate"
+    | "stressIndex"
+    | "frustrationLevel"
+    | "recoveryDebt"
+    | "noiseDistractionIndex"
+    | "lightingStrain"
+    | "workspaceErgonomics";
+
   threshold: number;
   condition: "above" | "below";
+
   title: string;
   content: string;
   source: string;
 }
 
+/**
+ * Knowledge Base = intervention rules triggered by telemetry signals
+ */
 export const KNOWLEDGE_BASE: Protocol[] = [
+  // ---------------- PHYSICAL ----------------
   {
-    id: "eye-v2026",
+    id: "phys-posture-01",
     category: "physical",
-    signal: "ocularStrain",
-    threshold: 40,
-    condition: "above",
-    title: "The 20-20-20 Ocular Reset",
-    content:
-      "Look at an object 20+ feet away for 20 seconds. Add conscious blinking to restore tear film stability.",
-    source: "Digital Eye Strain Guide 2026",
-  },
-
-  {
-    id: "posture-90",
-    category: "physical",
-    signal: "postureLoad",
+    metric: "postureLoad",
     threshold: 60,
     condition: "above",
-    title: "90-90-90 Alignment Protocol",
+    title: "Spinal Alignment Reset",
     content:
-      "Reset spinal alignment. Elbows, hips, knees at 90 degrees. Perform scapular activation.",
-    source: "OSHA Ergonomic Standards 2026",
+      "Run a 3-minute posture reset: neutral spine, shoulders down/back, monitor at eye level, and seated hip-knee angle near 90 degrees.",
+    source: "Occupational Ergonomics Practice Guide 2026",
+  },
+  {
+    id: "phys-hydration-01",
+    category: "physical",
+    metric: "hydrationDeficit",
+    threshold: 55,
+    condition: "above",
+    title: "Hydration Recovery Protocol",
+    content:
+      "Take 300–500ml water within 15 minutes. Add electrolytes if session exceeds 3 hours or if headache/fatigue is present.",
+    source: "Sports Medicine Hydration Consensus",
+  },
+  {
+    id: "phys-circulation-01",
+    category: "physical",
+    metric: "circulationRisk",
+    threshold: 60,
+    condition: "above",
+    title: "Circulation Microbreak Routine",
+    content:
+      "Every 30-45 minutes stand, walk for 2 minutes, and perform calf/hip mobility to reduce static-load back pain risk.",
+    source: "Sedentary Workload Injury Prevention Standard",
   },
 
+  // ---------------- MENTAL ----------------
   {
-    id: "cog-entropy",
+    id: "mental-focus-01",
     category: "mental",
-    signal: "focusCapacity",
-    threshold: 40,
+    metric: "focusCapacity",
+    threshold: 45,
     condition: "below",
     title: "Cognitive Context Reset",
     content:
-      "Step away from visual input for 5 minutes to reset cognitive load.",
-    source: "Behavioral Ergonomics Whitepaper 2026",
+      "Step away from active coding for 5 minutes. Resume with one prioritized task and a clear stop condition.",
+    source: "Cognitive Load Theory Field Notes 2026",
   },
-
   {
-    id: "stress-overload",
-    category: "emotional",
-    signal: "stressIndex",
-    threshold: 70,
-    condition: "above",
-    title: "Emotional Load Stabilization",
-    content:
-      "High stress detected. Pause output tasks and perform grounding reset.",
-    source: "Mental Health Engineering 2026",
-  },
-
-  {
-    id: "environment-collapse",
-    category: "environmental",
-    signal: "noiseDistractionIndex",
+    id: "mental-load-01",
+    category: "mental",
+    metric: "cognitiveLoad",
     threshold: 65,
     condition: "above",
-    title: "Environmental Focus Recovery",
+    title: "Complexity Decomposition Protocol",
     content:
-      "Reduce sensory overload. Switch to controlled workspace or silence inputs.",
-    source: "Workspace Optimization Study",
+      "Break current work into smaller executable units. Reduce branching decisions and checkpoint after each unit.",
+    source: "Engineering Productivity Research Group",
+  },
+  {
+    id: "mental-switch-01",
+    category: "mental",
+    metric: "contextSwitchRate",
+    threshold: 60,
+    condition: "above",
+    title: "Task Switching Dampener",
+    content:
+      "Use 45-minute single-task blocks with notifications muted. Batch communication and code reviews into dedicated windows.",
+    source: "Deep Work Execution Handbook",
+  },
+
+  // ---------------- EMOTIONAL ----------------
+  {
+    id: "emo-stress-01",
+    category: "emotional",
+    metric: "stressIndex",
+    threshold: 60,
+    condition: "above",
+    title: "Stress Decompression Protocol",
+    content:
+      "Execute two cycles of 4-7-8 breathing, then switch to lower-pressure tasks for 10 minutes before re-entry.",
+    source: "Behavioral Regulation in High-Load Teams",
+  },
+  {
+    id: "emo-frustration-01",
+    category: "emotional",
+    metric: "frustrationLevel",
+    threshold: 55,
+    condition: "above",
+    title: "Frustration Interrupt Script",
+    content:
+      "Pause and externalize the blocker: write the failure point, expected behavior, and one tiny next experiment.",
+    source: "Applied Cognitive Behavioral Workflow Notes",
+  },
+  {
+    id: "emo-recovery-01",
+    category: "emotional",
+    metric: "recoveryDebt",
+    threshold: 60,
+    condition: "above",
+    title: "Recovery Debt Clearance",
+    content:
+      "Take a non-productive restorative break: short walk, hydration, and no screens for 8-12 minutes.",
+    source: "Neuropsychological Recovery Systems Review",
+  },
+
+  // ---------------- ENVIRONMENTAL ----------------
+  {
+    id: "env-noise-01",
+    category: "environmental",
+    metric: "noiseDistractionIndex",
+    threshold: 55,
+    condition: "above",
+    title: "Noise Isolation Protocol",
+    content:
+      "Reduce ambient interference with headphones, quieter location, or white noise to stabilize attention.",
+    source: "Environmental Focus Stability Report",
+  },
+  {
+    id: "env-light-01",
+    category: "environmental",
+    metric: "lightingStrain",
+    threshold: 55,
+    condition: "above",
+    title: "Visual Lighting Correction",
+    content:
+      "Increase diffuse lighting, reduce screen glare, and match monitor brightness to room lighting to lower headache/eye strain risk.",
+    source: "Visual Ergonomics Standards 2026",
+  },
+  {
+    id: "env-ergo-01",
+    category: "environmental",
+    metric: "workspaceErgonomics",
+    threshold: 45,
+    condition: "below",
+    title: "Workspace Ergonomic Optimization",
+    content:
+      "Improve chair/desk setup, monitor height, and keyboard/mouse position to reduce cumulative physical and mental friction.",
+    source: "Workstation Ergonomics Consensus",
   },
 ];

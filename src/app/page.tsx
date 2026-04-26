@@ -1,5 +1,4 @@
 // src/app/page.tsx
-import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Activity } from "lucide-react";
 import Link from "next/link";
