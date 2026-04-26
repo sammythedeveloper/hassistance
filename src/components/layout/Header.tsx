@@ -14,7 +14,7 @@ export function Header() {
   }
 
   return (
-    <nav className="flex items-center justify-between px-10 py-6 mx-auto w-full bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-green-900 ">
+    <nav className="flex items-center justify-between px-10 py-10 mx-auto w-full bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-green-900 ">
       <div className="flex items-center gap-4">
         {pathname !== "/" && (
           <button

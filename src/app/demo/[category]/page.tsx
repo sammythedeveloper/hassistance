@@ -144,62 +144,62 @@ function getStatusTone(severity: Severity | undefined) {
   switch (severity) {
     case "Critical":
       return {
-        text: "text-red-500",
-        border: "border-red-500/40",
-        bg: "bg-red-500/5",
-        icon: "text-red-500",
+        text: "text-red-700 dark:text-red-500",
+        border: "border-red-300/80 dark:border-red-500/40",
+        bg: "bg-red-50 dark:bg-red-500/5",
+        icon: "text-red-700 dark:text-red-500",
       };
     case "High":
       return {
-        text: "text-orange-400",
-        border: "border-orange-500/35",
-        bg: "bg-orange-500/5",
-        icon: "text-orange-400",
+        text: "text-orange-700 dark:text-orange-400",
+        border: "border-orange-300/80 dark:border-orange-500/35",
+        bg: "bg-orange-50 dark:bg-orange-500/5",
+        icon: "text-orange-700 dark:text-orange-400",
       };
     case "Moderate":
       return {
-        text: "text-yellow-400",
-        border: "border-yellow-500/35",
-        bg: "bg-yellow-500/5",
-        icon: "text-yellow-400",
+        text: "text-amber-700 dark:text-yellow-400",
+        border: "border-amber-300/80 dark:border-yellow-500/35",
+        bg: "bg-amber-50 dark:bg-yellow-500/5",
+        icon: "text-amber-700 dark:text-yellow-400",
       };
     default:
       return {
-        text: "text-emerald-400",
-        border: "border-emerald-500/30",
-        bg: "bg-emerald-500/5",
-        icon: "text-emerald-500",
+        text: "text-emerald-700 dark:text-emerald-400",
+        border: "border-emerald-300/80 dark:border-emerald-500/30",
+        bg: "bg-emerald-50 dark:bg-emerald-500/5",
+        icon: "text-emerald-700 dark:text-emerald-500",
       };
   }
 }
 
 const assistantMarkdownComponents: Components = {
   h3: ({ children }) => (
-    <h3 className="mb-4 text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-400">
+    <h3 className="mb-4 text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400">
       {children}
     </h3>
   ),
   h4: ({ children }) => (
-    <h4 className="mb-3 mt-5 text-[12px] font-semibold uppercase tracking-[0.15em] text-emerald-400">
+    <h4 className="mb-3 mt-5 text-[12px] font-semibold uppercase tracking-[0.15em] text-emerald-700 dark:text-emerald-400">
       {children}
     </h4>
   ),
   p: ({ children }) => (
-    <p className="mb-4 last:mb-0 text-[14px] leading-relaxed text-zinc-300">
+    <p className="mb-4 last:mb-0 text-[14px] leading-relaxed text-zinc-700 dark:text-zinc-300">
       {children}
     </p>
   ),
   strong: ({ children }) => (
-    <strong className="font-semibold text-emerald-400">{children}</strong>
+    <strong className="font-semibold text-emerald-700 dark:text-emerald-400">{children}</strong>
   ),
   ul: ({ children }) => <ul className="mb-4 space-y-2">{children}</ul>,
   li: ({ children }) => (
-    <li className="flex items-start gap-2 text-[13px] leading-relaxed text-zinc-300">
-      <span className="mt-[1px] text-emerald-400">›</span>
+    <li className="flex items-start gap-2 text-[13px] leading-relaxed text-zinc-700 dark:text-zinc-300">
+      <span className="mt-[1px] text-emerald-700 dark:text-emerald-400">›</span>
       <span>{children}</span>
     </li>
   ),
-  hr: () => <hr className="my-5 border-zinc-700/70" />,
+  hr: () => <hr className="my-5 border-zinc-300 dark:border-zinc-700/70" />,
 };
 
 export default function DemoPage() {
@@ -530,7 +530,7 @@ export default function DemoPage() {
 
   return (
     <div className="flex h-[100dvh] flex-col bg-white dark:bg-zinc-950 text-black dark:text-white font-mono">
-      <header className="shrink-0 flex items-center justify-between px-4 md:px-6 py-4 border-b border-zinc-800 bg-white/80 dark:bg-zinc-950/90 backdrop-blur">
+      <header className="shrink-0 flex items-center justify-between px-4 md:px-6 py-8 border-b border-zinc-800 bg-white/80 dark:bg-zinc-950/90 backdrop-blur">
         <div className="flex items-center gap-3">
           <Link href="/get-started">
             <Button variant="ghost" size="icon" className="rounded-full">
@@ -601,7 +601,7 @@ export default function DemoPage() {
               {showConversationSurvey && !loading && (
                 <div className="flex justify-start">
                   <div className="rounded-2xl border border-zinc-800 bg-zinc-900/65 px-4 py-3">
-                    <p className="text-[10px] uppercase tracking-[0.16em] text-zinc-400">
+                    <p className="text-[10px] uppercase tracking-[0.16em] text-blue-500">
                       Rate This Conversation
                     </p>
                     <div className="mt-2 flex items-center gap-1.5">
@@ -653,7 +653,7 @@ export default function DemoPage() {
             className="shrink-0 p-4 border-t border-neutral-100 dark:border-zinc-800 bg-white dark:bg-zinc-950"
           >
             <div className="mx-auto w-full max-w-5xl">
-              <div className="relative rounded-[2.1rem] border border-zinc-800 bg-[#151519]">
+              <div className="relative rounded-[2.1rem] border border-zinc-800 bg-zinc-700/60">
                 <Textarea
                   ref={textareaRef}
                   value={issue}
@@ -671,7 +671,7 @@ export default function DemoPage() {
                   }
                   disabled={!activeCategory || loading}
                   rows={1}
-                  className="min-h-[56px] max-h-[220px] resize-none overflow-y-auto border-0 bg-transparent px-5 py-3 pr-16 text-[15px] leading-6 text-zinc-100 placeholder:text-zinc-500 shadow-none focus-visible:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 disabled:bg-transparent disabled:opacity-60"
+                  className="min-h-[56px] max-h-[220px] resize-none overflow-y-auto border-0 bg-transparent px-5 py-3 pr-16 text-[15px] leading-6 text-zinc-100 placeholder:text-zinc-300 shadow-none focus-visible:border-transparent focus-visible:ring-0 focus-visible:ring-offset-0 disabled:bg-transparent disabled:opacity-60"
                 />
 
                 <Button
