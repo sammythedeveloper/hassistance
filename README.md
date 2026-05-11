@@ -2,7 +2,7 @@
 
 # <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Satellite%20Antenna.png" width="40" height="40" /> HolisticAI `v2.0.1`
 
-**The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry, RAG-driven intelligence, and automated CI/CD pipelines.*
+**The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry, Rule-based retrieval + LLM-augmented intelligence, and automated CI/CD pipelines.*
 
 <div align="center">
   <img src="https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js&logoColor=white" />
