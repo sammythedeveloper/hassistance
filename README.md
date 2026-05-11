@@ -22,15 +22,15 @@ Software engineering is a high-performance sport. **Burnout, Ocular Strain, and 
 ---
 
 ## 🏗️ System Architecture & Infrastructure
-Designed for high-scale observability and seamless continuous delivery, mirroring the **Universe/Ticketmaster** service-centric metamorphosis.
+Designed with modular full-stack architecture principles focused on observability, maintainability, and continuous delivery.
 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Runtime** | `Node.js 22` + `Next.js 15` | High-performance full-stack execution |
+| **Runtime** | `Node.js` + `Next.js` | High-performance full-stack execution |
 | **Hosting** | `AWS Amplify` | Managed server side rendering deployment and CI/CD orchestration |
 | **Managed DB** | `Aiven PostgreSQL` | Production-grade relational persistence for telemetry logs |
 | **CI/CD** | `GitHub Actions` | Automated linting, type-checking, and deployment triggers |
-| **Inference** | `Gemini 2.5 Flash` + `RAG` | Grounded, medical-grade AI protocols via private KB |
+| **Inference** | `Gemini 2.5 Flash` + `Rule-Based Retrieval` | Telemetry-grounded wellness recommendations |
 | **DevOps** | `Docker Compose` | Local environment parity for rapid prototyping |
 
 ---
@@ -43,8 +43,8 @@ Integrated **GitHub Actions** workflows to ensure code quality and system stabil
 ### 🔵 Production-Grade Data (Aiven)
 Leveraged **Aiven** for a fully managed **PostgreSQL** instance, ensuring high availability for critical telemetry storage and seamless **Prisma** migrations across local and cloud environments.
 
-### 🟡 RAG-Powered Intelligence
-Unlike standard LLMs, AI responses are grounded in a **Private Vector-Style Knowledge Base**. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is accurate and peer-reviewed.
+### 🟡 Rule-Based Retrieval Intelligence
+Unlike standard LLM workflows, responses are grounded in a structured telemetry-aware knowledge base. The system evaluates developer state signals against predefined intervention protocols and injects the most relevant recommendations into the LLM context before generation.
 
 ---
 
