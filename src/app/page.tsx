@@ -11,7 +11,7 @@ export default function LandingPage() {
         <div className="space-y-8">
           <h1 className="text-5xl md:text-7xl leading-none font-mono">
             <span className="bg-clip-text text-transparent bg-gradient-to-b from-black to-zinc-500 dark:from-white dark:to-zinc-600">
-              Health Ai.
+              DevPulse AI.
             </span>
             <br />
             <span className="text-sm md:text-xl tracking-[0.3em] text-orange-500 dark:text-orange-400 block mt-2 font-mono opacity-80">
@@ -21,8 +21,8 @@ export default function LandingPage() {
           <p className="max-w-md text-xl text-neutral-500 dark:text-zinc-400 leading-relaxed font-mono">
             Low-latency wellness protocols for high-output engineers. Refactor
             your lifestyle with{" "}
-            <span className="text-emerald-500">zero-slop</span> logic. Secure,
-            private, and optimized for dark mode.
+            <span className="text-emerald-500">zero-slop</span> logic. Optimized
+            for dark mode and local session-based processing.
           </p>
           <div className="flex items-center gap-6 pt-4">
             <Link href="/get-started">
@@ -148,9 +148,9 @@ export default function LandingPage() {
               Privatized Health Data
             </h3>
             <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
-              Your health data stays{" "}
-              <span className="text-blue-500">local and encrypted</span>. No
-              selling your metrics; I just help you improve them.
+              Your telemetry is stored{" "}
+              <span className="text-blue-500">per-session </span> and not
+              exposed externally.
             </p>
           </div>
         </div>

@@ -26,7 +26,7 @@ export function Header() {
         )}
         <Link href="/" className="flex items-center gap-2">
           <Activity className="h-6 w-6 text-black dark:text-white" />
-          <span className="text-xl tracking-tighter font-mono">HolisticAI</span>
+          <span className="text-xl tracking-tighter font-mono">DevPulseAI</span>
         </Link>
       </div>
       <div className="flex items-center gap-4">

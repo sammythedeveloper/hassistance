@@ -41,7 +41,7 @@ function toTitle(value: string): string {
 
 function buildSystemOnlineMessage(category: Category | null): string {
   if (!category) {
-    return `### SYSTEM ONLINE\n**HolisticAI is active. Environment: Pending selection.**\n\nSelect a category to initialize telemetry sync.`;
+    return `### SYSTEM ONLINE\n**DevPulseAI is active. Environment: Pending selection.**\n\nSelect a category to initialize telemetry sync.`;
   }
 
   const environment = toTitle(category);
@@ -59,7 +59,7 @@ function buildSystemOnlineMessage(category: Category | null): string {
     }
   })();
 
-  return `### SYSTEM ONLINE\n**HolisticAI is active. Environment: ${environment}.**\n\n${contextParagraph}\n\nShare your specific concern below to begin telemetry sync.`;
+  return `### SYSTEM ONLINE\n**DevPulseAI is active. Environment: ${environment}.**\n\n${contextParagraph}\n\nShare your specific concern below to begin telemetry sync.`;
 }
 
 function getSystemLoadConfig(category: Category): MetricConfig[] {
@@ -190,7 +190,9 @@ const assistantMarkdownComponents: Components = {
     </p>
   ),
   strong: ({ children }) => (
-    <strong className="font-semibold text-emerald-700 dark:text-emerald-400">{children}</strong>
+    <strong className="font-semibold text-emerald-700 dark:text-emerald-400">
+      {children}
+    </strong>
   ),
   ul: ({ children }) => <ul className="mb-4 space-y-2">{children}</ul>,
   li: ({ children }) => (
@@ -226,9 +228,9 @@ export default function DemoPage() {
         (categoryInputs[activeCategory] ?? {}) as Record<string, number>
       )
     : "{}";
-  const telemetrySignature = `${activeCategory ?? "none"}|${
-    baseConfig.stack
-  }|${baseConfig.hoursCoded}|${activeCategoryInputSignature}`;
+  const telemetrySignature = `${activeCategory ?? "none"}|${baseConfig.stack}|${
+    baseConfig.hoursCoded
+  }|${activeCategoryInputSignature}`;
 
   const systemOnlineMessage = useMemo(
     () => buildSystemOnlineMessage(activeCategory),
@@ -541,7 +543,7 @@ export default function DemoPage() {
             <div className="bg-black dark:bg-white p-1.5 rounded-lg">
               <Activity className="h-4 w-4 text-white dark:text-black" />
             </div>
-            <span className="text-lg font-bold tracking-tight">HolisticAI</span>
+            <span className="text-lg font-bold tracking-tight">DevPulseAI</span>
           </Link>
         </div>
 

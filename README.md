@@ -2,7 +2,7 @@
 
 # <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Satellite%20Antenna.png" width="40" height="40" /> DevPulse AI `v2.0.1`
 
-**The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry, Rule-based retrieval + LLM-augmented intelligence, and automated CI/CD pipelines.*
+**The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry, RAG-driven intelligence, and automated CI/CD pipelines.*
 
 <div align="center">
   <img src="https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=next.js&logoColor=white" />
@@ -15,22 +15,23 @@
 ---
 
 ### ⚡ The Problem: "The Silent Memory Leak"
-Software engineering is a high-performance sport. **Burnout, Ocular Strain, and Postural Collapse** aren't just inconveniences—they are systemic failures in the developer's execution environment. 
+
+Software engineering is a high-performance sport. **Burnout, Ocular Strain, and Postural Collapse** aren't just inconveniences—they are systemic failures in the developer's execution environment.
 
 </div>
 
 ---
 
 ## 🏗️ System Architecture & Infrastructure
-Designed with modular full-stack architecture principles focused on observability, maintainability, and continuous delivery.
+Designed for high-scale observability and seamless continuous delivery, mirroring the **Universe/Ticketmaster** service-centric metamorphosis.
 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Runtime** | `Node.js` + `Next.js` | High-performance full-stack execution |
+| **Runtime** | `Node.js 22` + `Next.js 15` | High-performance full-stack execution |
 | **Hosting** | `AWS Amplify` | Managed server side rendering deployment and CI/CD orchestration |
 | **Managed DB** | `Aiven PostgreSQL` | Production-grade relational persistence for telemetry logs |
 | **CI/CD** | `GitHub Actions` | Automated linting, type-checking, and deployment triggers |
-| **Inference** | `Gemini 2.5 Flash` + `Rule-Based Retrieval` | Telemetry-grounded wellness recommendations |
+| **Inference** | `Gemini 2.5 Flash` + `RAG` | Grounded, medical-grade AI protocols via private KB |
 | **DevOps** | `Docker Compose` | Local environment parity for rapid prototyping |
 
 ---
@@ -38,16 +39,17 @@ Designed with modular full-stack architecture principles focused on observabilit
 ## 🚀 Key Features
 
 ### 🟢 Automated CI/CD Pipeline
+
 Integrated **GitHub Actions** workflows to ensure code quality and system stability. Every PR triggers automated linting and type-safety checks before merging to `main`.
 
 ### 🔵 Production-Grade Data (Aiven)
+
 Leveraged **Aiven** for a fully managed **PostgreSQL** instance, ensuring high availability for critical telemetry storage and seamless **Prisma** migrations across local and cloud environments.
 
-### 🟡 Rule-Based Retrieval Intelligence
-Unlike standard LLM workflows, responses are grounded in a structured telemetry-aware knowledge base. The system evaluates developer state signals against predefined intervention protocols and injects the most relevant recommendations into the LLM context before generation.
+### 🟡 RAG-Powered Intelligence
+Unlike standard LLMs, AI responses are grounded in a **Private Vector-Style Knowledge Base**. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is accurate and peer-reviewed.
 
 ---
-
 
 ## 🛠️ Installation & Setup
 
@@ -64,3 +66,4 @@ npm run dev
 
 P.S - This is a scalable application and right now its on its v.0.1 , i will be pushing more freatures as i am working and making the ai more personalized.
 
+```
