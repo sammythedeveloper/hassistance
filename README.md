@@ -1,6 +1,6 @@
 <div align="center">
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Satellite%20Antenna.png" width="40" height="40" /> HolisticAI `v2.0.1`
+# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Satellite%20Antenna.png" width="40" height="40" /> DevPulse AI `v2.0.1`
 
 **The Health Operating System for Engineers.** *Optimizing human hardware through real-time telemetry, Rule-based retrieval + LLM-augmented intelligence, and automated CI/CD pipelines.*
 
