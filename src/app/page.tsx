@@ -11,7 +11,7 @@ export default function LandingPage() {
         <div className="space-y-8">
           <h1 className="text-5xl md:text-7xl leading-none font-mono">
             <span className="bg-clip-text text-transparent bg-gradient-to-b from-black to-zinc-500 dark:from-white dark:to-zinc-600">
-              DevPulse AI.
+              DevPulse
             </span>
             <br />
             <span className="text-sm md:text-xl tracking-[0.3em] text-orange-500 dark:text-orange-400 block mt-2 font-mono opacity-80">

@@ -16,7 +16,7 @@ export function Footer() {
       <div className="flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-2 opacity-60">
           <Activity className="h-4 w-4" />
-          <span className="text-sm tracking-tighter">DevPulseAI</span>
+          <span className="text-sm tracking-tighter">DevPulse</span>
         </div>
 
         <div className="flex flex-wrap justify-center gap-8 text-[11px] uppercase tracking-widest text-neutral-500 dark:text-zinc-500">

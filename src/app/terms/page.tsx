@@ -28,7 +28,7 @@ export default function TermsPage() {
             </h2>
           </div>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-            DevPulse AI. is a technical demonstration for wellness optimization.
+            DevPulse is a technical demonstration for wellness optimization.
             It is{" "}
             <span className="text-red-500 font-bold underline">
               not a medical application
