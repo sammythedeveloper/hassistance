@@ -23,7 +23,7 @@ Software engineering is a high-performance sport. **Burnout, Ocular Strain, and 
 ---
 
 ## 🏗️ System Architecture & Infrastructure
-Designed for high-scale observability and seamless continuous delivery, mirroring the **Universe/Ticketmaster** service-centric metamorphosis.
+Designed for high-scale observability and seamless continuous delivery.
 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
