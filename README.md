@@ -46,7 +46,7 @@ Integrated **GitHub Actions** workflows to ensure code quality and system stabil
 
 Leveraged **Aiven** for a fully managed **PostgreSQL** instance, ensuring high availability for critical telemetry storage and seamless **Prisma** migrations across local and cloud environments.
 
-### 🟡 RAG-Powered Intelligence
+### 🟡 Curated and Personalized Intelligence
 Unlike standard LLMs, AI responses are grounded in a **Private Vector-Style Knowledge Base**. It retrieves medical-grade ergonomic protocols to ensure every "Executable Script" is accurate and peer-reviewed.
 
 ---
