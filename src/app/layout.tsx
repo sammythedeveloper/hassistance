@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -31,20 +32,38 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-     <body className="min-h-full flex flex-col bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
-  <ThemeProvider
-    attribute="class"
-    defaultTheme="system"
-    enableSystem
-    disableTransitionOnChange
-  >
-    <SystemProvider>
-      <Header />
-      {children}
-      <Footer />
-    </SystemProvider>
-  </ThemeProvider>
-</body>
+      <body className="min-h-full flex flex-col bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SystemProvider>
+            <Header />
+            {children}
+            <Footer />
+          </SystemProvider>
+        </ThemeProvider>
+        <Script id="tawk-to" strategy="afterInteractive">
+          {`
+    var Tawk_API = Tawk_API || {};
+    var Tawk_LoadStart = new Date();
+
+    (function(){
+      var s1 = document.createElement("script");
+      var s0 = document.getElementsByTagName("script")[0];
+
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/6a67d2ded0043a1d45a110e1/1juiovd5l';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin','*');
+
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+  `}
+        </Script>
+      </body>
     </html>
   );
 }
