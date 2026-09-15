@@ -2,11 +2,11 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Script from "next/script";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
 import { SystemProvider } from "@/context/SystemContext";
+import { ChatbotTrigger } from "@/components/chatbot/chatbot-trigger";
+import { Chatbot } from "@/components/chatbot/chatbot";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -36,34 +36,18 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
         <ClerkProvider>
           <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
-          <SystemProvider>
-          {children}
-          <Footer />
-          </SystemProvider>
+            <SystemProvider>
+              {children}
+              <Footer />
+              <Chatbot />
+              <ChatbotTrigger />
+            </SystemProvider>
           </ThemeProvider>
-          <Script id="tawk-to" strategy="afterInteractive">
-          {`
-          var Tawk_API = Tawk_API || {};
-          var Tawk_LoadStart = new Date();
-
-          (function(){
-          var s1 = document.createElement("script");
-          var s0 = document.getElementsByTagName("script")[0];
-
-          s1.async = true;
-          s1.src='https://embed.tawk.to/6a67c54aaa7dbb1d404d07a3/1juillb5p';
-          s1.charset = 'UTF-8';
-          s1.setAttribute('crossorigin','*');
-
-          s0.parentNode.insertBefore(s1,s0);
-          })();
-          `}
-          </Script>
         </ClerkProvider>
       </body>
     </html>
