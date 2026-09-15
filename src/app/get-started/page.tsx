@@ -1,81 +1,194 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Activity, Heart, Globe, Cpu, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import Link from "next/link";
+import { useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { Activity, Cpu, Wind, Lamp, ArrowRight, LogOut } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
 
-function Typewriter({ text, speed = 20 }: { text: string; speed?: number }) {
-  const [displayed, setDisplayed] = useState("");
-
-  useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i < text.length) {
-        setDisplayed((prev) => prev + text.charAt(i));
-        i++;
-      } else {
-        clearInterval(timer);
-      }
-    }, speed);
-    return () => clearInterval(timer);
-  }, [text, speed]);
-
-  return <span>{displayed}</span>;
-}
-
-const categories = {
-  physical: {
+const DOMAINS = [
+  {
+    id: "physical",
+    bay: "A1",
     label: "Physical",
     icon: Activity,
-    desc: "Refactor your hardware. Optimize circulation, posture, and recovery cycles.",
+    load: "bodyStrain · recoveryCapacity",
+    signals: ["postureLoad", "hydrationDeficit", "circulationRisk"],
+    blurb: "Posture, hydration, and circulation under sustained hours.",
   },
-  mental: {
+  {
+    id: "mental",
+    bay: "A2",
     label: "Mental",
     icon: Cpu,
-    desc: "Clear the cache. Cognitive load management and logic-path optimization.",
+    load: "sustainedAttention · decisionFatigue",
+    signals: ["focusCapacity", "cognitiveLoad", "contextSwitchRate"],
+    blurb: "Focus capacity, cognitive load, and context switching.",
   },
-  emotional: {
+  {
+    id: "emotional",
+    bay: "A3",
     label: "Emotional",
-    icon: Heart,
-    desc: "Manage system state. Baseline regulation and stress-test mitigation.",
+    icon: Wind,
+    load: "emotionalStability · escalationRisk",
+    signals: ["stressIndex", "frustrationLevel", "recoveryDebt"],
+    blurb: "Stress, friction, and recovery debt accumulation.",
   },
-  environmental: {
+  {
+    id: "environmental",
+    bay: "A4",
     label: "Environmental",
-    icon: Globe,
-    desc: "Context awareness. Modifying your workspace for signal-to-noise ratio.",
+    icon: Lamp,
+    load: "sensoryLoad · focusSupport",
+    signals: ["noiseDistractionIndex", "lightingStrain", "workspaceErgonomics"],
+    blurb: "Noise, lighting, and workstation ergonomics.",
   },
-};
+] as const;
 
-export default function GetStarted() {
+export default function GetStartedPage() {
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
+  const { signOut } = useClerk();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    // Clear local storage keys
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Sign out via Clerk and redirect
+    await signOut();
+    router.push("/sign-in");
+  };
+
   return (
-    <div className="relative min-h-screen bg-white dark:bg-zinc-950 p-10 font-mono">
-      <div className="max-w-4xl mx-auto space-y-24 py-20">
-        {/* Intro */}
-        <div className="space-y-6">
-          <h1 className="text-4xl font-bold tracking-tighter">The Protocol</h1>
-          <div className="text-zinc-500 leading-relaxed max-w-xl text-lg">
-            <Typewriter text="Select your current bottleneck. I will initialize the correct wellness pipeline." />
+    <div className="min-h-dvh bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
+      {/* Header — matches landing/about */}
+      <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-zinc-100/80 py-6 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80">
+        <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-8">
+          <Link href="/" className="flex items-center gap-2 font-mono text-sm">
+            <span className="flex size-7 items-center justify-center rounded-md border border-zinc-300 text-[11px] dark:border-zinc-700">
+              DP
+            </span>
+            DevPulse
+          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowSignOutModal(true)}
+              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase hover:text-black tracking-[0.2em] text-zinc-500 dark:hover:text-white sm:inline-flex"
+            >
+              <span>Sign Out</span>
+            </button>
+            <ModeToggle />
           </div>
         </div>
+      </header>
 
-        {/* Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Object.entries(categories).map(
-            ([key, { icon: Icon, desc, label }]) => (
-              <Link
-                key={key}
-                href={`/demo/${key}`}
-                className="p-6 border rounded-2xl hover:border-emerald-500 hover:bg-emerald-500/5 transition group"
-              >
-                <Icon className="w-6 h-6 mb-4 text-emerald-500" />
-                <div className="font-bold text-lg mb-2">{label}</div>
-                <div className="text-xs text-zinc-500">{desc}</div>
-                <ChevronRight className="w-4 h-4 mt-4 text-zinc-400 group-hover:text-emerald-500" />
-              </Link>
-            )
-          )}
+      <main className="mx-auto max-w-[1280px] px-4 py-12 sm:px-8 sm:py-16">
+        {/* Intro */}
+        <div className="max-w-2xl">
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-orange-500">
+            Session · Initialize
+          </p>
+          <h1 className="mt-4 text-4xl font-medium tracking-tight sm:text-5xl">
+            Choose the domain under load.
+          </h1>
+          <p className="mt-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-lg">
+            Telemetry is scored first. Retrieval only fires what crossed a
+            threshold. The model narrates those results — nothing else. Pick the
+            bay that matches your current pressure.
+          </p>
         </div>
-      </div>
+
+        {/* Domain grid */}
+        <div className="mt-14 grid gap-4 sm:grid-cols-2">
+          {DOMAINS.map((d) => {
+            const Icon = d.icon;
+            return (
+              <Link
+                key={d.id}
+                href={`/get-started/${d.id}`}
+                className="group flex flex-col rounded-[24px] border border-zinc-200 bg-white p-6 transition hover:border-orange-500/60 dark:border-zinc-800 dark:bg-zinc-900 sm:p-8"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-10 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700">
+                      <Icon className="size-4 text-zinc-500 group-hover:text-orange-500" />
+                    </div>
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+                        Bay {d.bay}
+                      </p>
+                      <h2 className="text-xl font-medium tracking-tight">
+                        {d.label}
+                      </h2>
+                    </div>
+                  </div>
+                  <ArrowRight className="size-4 shrink-0 text-zinc-300 transition group-hover:translate-x-0.5 group-hover:text-orange-500 dark:text-zinc-600" />
+                </div>
+
+                <p className="mt-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  {d.blurb}
+                </p>
+
+                <div className="mt-6 space-y-2">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-400">
+                    Derived · {d.load}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {d.signals.map((s) => (
+                      <span
+                        key={s}
+                        className="rounded-md border border-zinc-200 px-2 py-1 font-mono text-[10px] text-zinc-500 dark:border-zinc-700"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Footer note */}
+        <div className="mt-12 flex flex-col gap-2 border-t border-zinc-200 pt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 dark:border-zinc-800 sm:flex-row sm:items-center sm:justify-between">
+          <span>Telemetry stays on-session</span>
+          <span>3 protocol turns · no card required</span>
+        </div>
+      </main>
+
+      {/* Sign Out Confirmation Modal */}
+      {showSignOutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
+            <h3 className="font-mono text-xs uppercase tracking-widest text-orange-500">
+              Terminal Session
+            </h3>
+            <h2 className="mt-2 text-xl font-medium text-zinc-900 dark:text-zinc-100">
+              Terminate Active Session?
+            </h2>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              Signing out will clear your active telemetry state and local
+              session cache.
+            </p>
+            <div className="mt-6 flex items-center justify-end gap-3 font-mono text-xs">
+              <button
+                onClick={() => setShowSignOutModal(false)}
+                className="rounded-lg border border-zinc-300 px-4 py-2.5 uppercase tracking-wider text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSignOut}
+                className="rounded-lg bg-orange-500 px-4 py-2.5 uppercase tracking-wider text-zinc-950 font-semibold hover:bg-orange-400"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

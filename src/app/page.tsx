@@ -23,8 +23,8 @@ const BAYS: {
     id: "physical",
     bay: "A1",
     label: "Physical",
-    severity: "High",
-    gauge: 73,
+    severity: "CRITICAL ",
+    gauge: 93,
     icon: Activity,
     meters: [
       { label: "Posture", value: 78 },
@@ -203,7 +203,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
-      <header className="sticky top-0 z-40 border-b border-zinc-200 bg-zinc-100/85 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/85">
+      <header className="sticky top-0 z-40 py-4 border-b border-zinc-200 bg-zinc-100/85 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/85">
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 py-3 sm:px-8">
           <Link href="/" className="flex items-center gap-2 font-mono text-sm">
             <span className="flex size-7 items-center justify-center rounded-md border border-zinc-300 text-[11px] dark:border-zinc-700">
@@ -219,13 +219,13 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/sign-in"
-              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 sm:inline-flex"
+              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 dark:hover:text-white sm:inline-flex"
             >
               Sign in
             </Link>
             <Link
               href="/sign-up"
-              className="inline-flex min-h-10 items-center rounded-full bg-zinc-900 px-4 font-mono text-[11px] uppercase tracking-[0.2em] text-white dark:bg-white dark:text-zinc-900"
+              className="inline-flex min-h-10 items-center rounded-full bg-zinc-900 px-4 font-mono text-[11px] uppercase tracking-[0.2em] text-white dark:bg-white dark:text-zinc-900 dark:hover:text-orange-500   "
             >
               Try free
             </Link>
@@ -237,7 +237,10 @@ export default function LandingPage() {
       </header>
 
       <div className="mx-auto max-w-[1280px] px-4 sm:px-8">
-        <section className="grid gap-10 py-12 lg:grid-cols-2 lg:items-end lg:py-16">
+        <section
+          id="product"
+          className="grid gap-10 py-12 lg:grid-cols-2 lg:items-end lg:py-16"
+        >
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-orange-500">
               Protocol engine · not a chatbot
@@ -256,7 +259,7 @@ export default function LandingPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/sign-up"
-                className="inline-flex min-h-12 items-center rounded-full bg-zinc-900 px-7 font-mono text-[11px] uppercase tracking-[0.24em] text-white dark:bg-white dark:text-zinc-900"
+                className="inline-flex min-h-12 items-center hover:text-black  rounded-full bg-zinc-900 hover:bg-gray-400 px-7 font-mono text-[11px] uppercase tracking-[0.24em] text-white dark:bg-white dark:text-zinc-900"
               >
                 Try free
               </Link>
@@ -273,10 +276,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section
-          id="product"
-          className="overflow-hidden rounded-[32px] border border-zinc-200 bg-zinc-50 dark:border-zinc-800  dark:bg-zinc-900"
-        >
+        <section className="overflow-hidden rounded-[32px] border  border-zinc-200 bg-zinc-50 dark:border-zinc-800  dark:bg-zinc-900">
           <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-[1.05fr_1.1fr_0.95fr]">
             <div>
               <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-400">

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Holistic AI ",
+  title: "DevPulse",
   description: "Advanced wellness for programmers",
   icons: {
     icon: "/icon.svg",
@@ -43,11 +43,11 @@ export default function RootLayout({
           >
             <SystemProvider>
               {children}
-              <Footer />
-              <Chatbot />
               <ChatbotTrigger />
             </SystemProvider>
           </ThemeProvider>
+          {/* Placed outside ThemeProvider to avoid hydration script conflicts */}
+          <Chatbot />
         </ClerkProvider>
       </body>
     </html>

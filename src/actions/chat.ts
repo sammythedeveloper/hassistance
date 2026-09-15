@@ -39,6 +39,10 @@ interface HealthConsultationResponse {
   conversationEnded?: boolean;
 }
 
+/* -----------------------------
+   HELPERS
+------------------------------ */
+
 function isGreetingOrMetaQuestion(text: string): boolean {
   const lower = text.trim().toLowerCase();
 
@@ -81,19 +85,10 @@ function isConversationClosingMessage(text: string): boolean {
     "it was really helpful",
   ];
 
-  const continuationSignals = [
-    "?",
-    "one more",
-    "another question",
-    "also",
-    "but ",
-  ];
+  const continuationSignals = ["?", "one more", "another question", "also", "but "];
 
-  if (continuationSignals.some((signal) => lower.includes(signal))) {
-    return false;
-  }
-
-  return closingSignals.some((signal) => lower.includes(signal));
+  if (continuationSignals.some((s) => lower.includes(s))) return false;
+  return closingSignals.some((s) => lower.includes(s));
 }
 
 function formatConversationHistory(history?: ConversationTurn[]): string {
@@ -102,21 +97,16 @@ function formatConversationHistory(history?: ConversationTurn[]): string {
   return history
     .slice(-6)
     .map((turn, index) => {
-      const normalizedContent = turn.content.replace(/\s+/g, " ").trim();
-      return `${index + 1}. ${turn.role.toUpperCase()}: ${normalizedContent}`;
+      const normalized = turn.content.replace(/\s+/g, " ").trim();
+      return `${index + 1}. ${turn.role.toUpperCase()}: ${normalized}`;
     })
     .join("\n");
 }
 
-/* -----------------------------
-   1. INTENT CLASSIFIER (SAFE GUARD)
------------------------------- */
 function classifyIntent(text: string): Intent {
   const lower = text.toLowerCase();
 
-  // unsafe / unrelated domains (soft guard, NOT hard block)
   const unsafeSignals = ["sex", "porn", "dating", "gambling", "casino"];
-
   const outOfScopeSignals = [
     "nba",
     "football",
@@ -128,21 +118,12 @@ function classifyIntent(text: string): Intent {
     "entertainment",
   ];
 
-  if (unsafeSignals.some((k) => lower.includes(k))) {
-    return "unsafe";
-  }
-
-  if (outOfScopeSignals.some((k) => lower.includes(k))) {
-    return "out_of_scope";
-  }
-
+  if (unsafeSignals.some((k) => lower.includes(k))) return "unsafe";
+  if (outOfScopeSignals.some((k) => lower.includes(k))) return "out_of_scope";
   return "developer_context";
 }
 
-function formatCategoryInputs(
-  category: Category,
-  metrics: TelemetryMetrics
-): string {
+function formatCategoryInputs(category: Category, metrics: TelemetryMetrics): string {
   switch (category) {
     case "physical":
       return `Posture Load: ${metrics.physical.postureLoad}% | Hydration Deficit: ${metrics.physical.hydrationDeficit}% | Circulation Risk: ${metrics.physical.circulationRisk}%`;
@@ -155,10 +136,7 @@ function formatCategoryInputs(
   }
 }
 
-function formatCategorySystemLoad(
-  category: Category,
-  metrics: TelemetryMetrics
-): string {
+function formatCategorySystemLoad(category: Category, metrics: TelemetryMetrics): string {
   switch (category) {
     case "physical":
       return `Body Strain: ${metrics.systemLoad.physical.bodyStrain}% | Recovery Capacity: ${metrics.systemLoad.physical.recoveryCapacity}%`;
@@ -171,17 +149,11 @@ function formatCategorySystemLoad(
   }
 }
 
-function getCategoryStatus(
-  category: Category,
-  metrics: TelemetryMetrics
-): DomainStatus {
+function getCategoryStatus(category: Category, metrics: TelemetryMetrics): DomainStatus {
   return metrics.status[category];
 }
 
-function getCategoryFooterSignal(
-  category: Category,
-  metrics: TelemetryMetrics
-): string {
+function getCategoryFooterSignal(category: Category, metrics: TelemetryMetrics): string {
   switch (category) {
     case "physical":
       return `BODY STRAIN ${metrics.systemLoad.physical.bodyStrain}%`;
@@ -195,18 +167,21 @@ function getCategoryFooterSignal(
 }
 
 /* -----------------------------
-   2. SYSTEM PROMPT BUILDER
+   SYSTEM PROMPT (STRICT)
 ------------------------------ */
+
 function buildSystemPrompt({
   metrics,
   manualContext,
   category,
   baseConfig,
+  protocolCount,
 }: {
   metrics: TelemetryMetrics;
   manualContext: string;
   category: Category;
   baseConfig: ConsultationContext["baseConfig"];
+  protocolCount: number;
 }) {
   const categoryStatus = getCategoryStatus(category, metrics);
   const footerSignal = getCategoryFooterSignal(category, metrics);
@@ -214,107 +189,62 @@ function buildSystemPrompt({
   const loadMetrics = formatCategorySystemLoad(category, metrics);
 
   return `
-NAME: Sheger (Holistic Developer Wellbeing System)
-ROLE: You are a senior engineering lead and cognitive wellness assistant for software developers.
+NAME: DevPulse
+ROLE: Strict narrator of retrieved protocols only.
 
-You operate ONLY in developer context:
-- coding
-- system design
-- productivity
-- cognitive load
-- burnout prevention
-- workspace optimization
+CORE CONTRACT (NON-NEGOTIABLE):
+- You may ONLY recommend protocols that appear in the KNOWLEDGE BASE section below.
+- You may paraphrase them. You may never invent new interventions, tips, exercises, breathing techniques, or steps.
+- Maximum number of recommendations = ${protocolCount}. Never exceed this number.
+- If the user asks for something outside the retrieved protocols, say you can only work with what the current telemetry triggered.
 
---- USER CATEGORY MODE ---
-Active Focus Area: ${category}
+--- ACTIVE DOMAIN ---
+${category}
 
---- TELEMETRY STATE ---
+--- TELEMETRY ---
 Stack: ${baseConfig.stack}
 OS: ${baseConfig.os ?? "Unknown"}
 Input Metrics: ${inputMetrics}
-Derived System Load: ${loadMetrics}
-Category Status: ${categoryStatus.label} (${categoryStatus.severity})
-Status Message: ${categoryStatus.statusMessage}
+Derived Load: ${loadMetrics}
+Status: ${categoryStatus.label} (${categoryStatus.severity})
+Message: ${categoryStatus.statusMessage}
 
---- KNOWLEDGE BASE (RAG) ---
+--- KNOWLEDGE BASE (ONLY SOURCE OF TRUTH) ---
 ${manualContext}
 
---- BEHAVIOR RULES ---
-1. Never provide unsolicited analysis. If the user sends only a greeting or meta message, reply briefly and ask what their specific concern is.
+--- BEHAVIOR ---
+1. Greetings / meta messages → short reply + ask for the concrete concern. No markdown sections. No STATUS footer.
+2. Concrete concern → use the format below.
+3. Follow-ups ("will this help?", "what else?", "any other tips?") → answer in 2–4 sentences. Do not restart the full template. Do not invent new protocols.
+4. Out-of-scope → reframe once into developer load/focus context, then stop.
+5. Unsafe → return exactly: "SECURITY ERROR: This request cannot be processed within system safety boundaries."
 
-2. Only give recommendations when the user asks a concrete concern/symptom/problem.
-
-3. Always acknowledge user emotion before advice when emotion or discomfort is present.
-
-4. Never behave like a generic chatbot — always contextualize responses as system optimization advice.
-
-5. FOLLOW-UP HANDLING:
-   - If user asks a short follow-up like "will this help?" or "do you think that will work?", treat it as a continuation of the same thread.
-   - Answer directly first (yes/probably + why), then provide 1-2 concrete adjustments.
-   - Do NOT restart the conversation or ask them to restate their concern.
-
-6. If user is out of scope:
-   - DO NOT engage in topic
-   - DO NOT lecture
-   - REFRAME into developer wellbeing context
-   Example:
-   "I can’t assist with that directly, but we can look at how it might affect your focus or workflow."
-
-7. If unsafe content is detected:
-   Respond:
-   "SECURITY ERROR: This request cannot be processed within system safety boundaries."
-
-8. Tone:
-   - calm
-   - technical but human
-   - supportive
-   - slightly “engineering aesthetic”
-   - avoid repetitive self-introductions
-
---- RESPONSE FORMAT (STRICT FOR CONCERN-BASED REPLIES) ---
-For NEW concrete concerns, respond in markdown and keep one blank line between each section:
-
+--- RESPONSE FORMAT (ONLY FOR NEW CONCRETE CONCERNS) ---
 ### Issue Snapshot
-1-2 concise sentences that connect the user's concern to telemetry.
+1–2 sentences that connect the user's concern to the current telemetry numbers.
 
 ### Recommendations
-› Step 1 on its own line
-› Step 2 on its own line
-› Step 3 on its own line (optional)
+(Only list protocols that appear in the Knowledge Base above. One protocol = one line. Never invent.)
+
+› [Exact or close title]: short paraphrase of the content
 
 ### Why This Works
-One short explanatory paragraph in plain language.
+One short paragraph explaining why these specific retrieved protocols match the current numbers.
 
 ### Next Checkpoint
-One sentence describing what the user should monitor over the next 30-90 minutes.
+One sentence on what the user should watch over the next 30–90 minutes.
 
 ---
 _Disclaimer: I'm an AI assistant, not a medical professional. If symptoms persist, consult a qualified healthcare provider._
 
 STATUS: ${categoryStatus.label} (${categoryStatus.severity}) | SIGNAL: ${footerSignal} | SYNC: ${new Date().toLocaleTimeString()}
-
-Formatting constraints:
-- Every bullet must be on its own line.
-- Keep paragraphs to max 2 sentences.
-- Avoid wall-of-text blocks.
-- Keep recommendation headers as markdown headings (###) so they are visually scannable.
-
-For greetings/meta messages:
-- Reply in 1-2 short lines.
-- Ask for the user's specific concern.
-- Do not include markdown sections.
-- Do not include STATUS footer.
-
-For follow-up continuation questions:
-- Reply naturally in 2-4 sentences.
-- Give a direct confidence answer first, then a short practical next move.
-- Avoid repeating the full template unless the user asks for a full reset plan.
 `;
 }
 
 /* -----------------------------
    MAIN HANDLER
 ------------------------------ */
+
 export async function handleHealthConsultation(
   formData: HealthConsultationRequest
 ): Promise<HealthConsultationResponse> {
@@ -325,10 +255,10 @@ export async function handleHealthConsultation(
     };
   }
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
   try {
-    /* 1. TELEMETRY ENGINE */
+    // 1. Telemetry
     const metrics = calculateDeveloperMetrics(
       {
         hoursCoded: formData.context.baseConfig.hoursCoded,
@@ -337,17 +267,10 @@ export async function handleHealthConsultation(
       formData.context.categoryInputs ?? {}
     );
 
-    /* 2. RAG RETRIEVAL */
+    // 2. Retrieval
     const relevantProtocols = retrieveRelevantProtocols(metrics, formData.category);
 
-    const manualContext =
-      relevantProtocols.length > 0
-        ? relevantProtocols
-            .map((p) => `[SOURCE: ${p.source}] ${p.title}: ${p.content}`)
-            .join("\n\n")
-        : "No active triggers. Provide general developer wellness optimization.";
-
-    /* 3. INTENT CHECK (NEW LAYER) */
+    // 3. Early exits (no model call)
     const intent = classifyIntent(formData.issue);
 
     if (intent === "unsafe") {
@@ -371,16 +294,30 @@ export async function handleHealthConsultation(
     if (isGreetingOrMetaQuestion(formData.issue)) {
       return {
         success: true,
-        answer: `Hey, I’m Sheger. Tell me your specific ${formData.category} concern, and I’ll give focused recommendations based on your current telemetry context.`,
+        answer: `Session is live on ${formData.category}. What broke — load, environment, or a specific symptom?`,
         conversationEnded: false,
       };
     }
 
-    let rewrittenInput = formData.issue;
+    // Hard short-circuit when nothing triggered
+    if (relevantProtocols.length === 0) {
+      const status = getCategoryStatus(formData.category, metrics);
+      return {
+        success: true,
+        answer: `Current ${formData.category} signals are in band (${status.label} · ${status.severity}). No protocol crossed a threshold, so I have nothing ranked to run. Want to adjust the telemetry inputs and re-score?`,
+        conversationEnded: false,
+      };
+    }
 
+    // 4. Build context for the model
+    const manualContext = relevantProtocols
+      .map((p) => `[SOURCE: ${p.source}] ${p.title}: ${p.content}`)
+      .join("\n\n");
+
+    let rewrittenInput = formData.issue;
     if (intent === "out_of_scope") {
       rewrittenInput =
-        "User asked an unrelated topic. Reframe into developer productivity or cognitive load context.";
+        "User asked an unrelated topic. Reframe once into developer productivity or cognitive load context, then stop.";
     }
 
     const recentConversationContext = formatConversationHistory(formData.history);
@@ -388,7 +325,7 @@ export async function handleHealthConsultation(
       ? `RECENT CONVERSATION CONTEXT:\n${recentConversationContext}\n\nCURRENT USER MESSAGE:\n${rewrittenInput}`
       : rewrittenInput;
 
-    /* 4. GEMINI MODEL */
+    // 5. Model call
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       systemInstruction: buildSystemPrompt({
@@ -396,13 +333,14 @@ export async function handleHealthConsultation(
         manualContext,
         category: formData.category,
         baseConfig: formData.context.baseConfig,
+        protocolCount: relevantProtocols.length,
       }),
     });
 
     const result = await model.generateContent(modelInput);
     const responseText = result.response.text();
 
-    /* 5. DATABASE STORAGE */
+    // 6. Persist
     const conversation = await prisma.conversation.upsert({
       where: { sessionId: formData.sessionId },
       update: {},
