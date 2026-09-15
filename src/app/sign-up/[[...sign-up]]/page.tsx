@@ -66,12 +66,7 @@ export default function SignUpPage() {
                 fontFamily:
                   "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
                 colorPrimary: dark ? "#fafafa" : "#18181b",
-                colorText: dark ? "#fafafa" : "#18181b",
-                colorTextSecondary: dark ? "#a1a1aa" : "#71717a",
                 colorBackground: dark ? "#18181b" : "#ffffff",
-                colorInputBackground: dark ? "#09090b" : "#f4f4f5",
-                colorInputText: dark ? "#fafafa" : "#18181b",
-                colorNeutral: dark ? "#fafafa" : "#18181b",
               },
               elements: {
                 rootBox: "w-full flex justify-center",
