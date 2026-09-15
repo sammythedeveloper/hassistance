@@ -1,186 +1,508 @@
-// src/app/page.tsx
-import { Button } from "@/components/ui/button";
-import { Activity } from "lucide-react";
+"use client";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
+import { Activity, Cpu, Droplets, Eye, Lamp, Wind } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
+
+type Domain = "physical" | "mental" | "emotional" | "environmental";
+
+const BAYS: {
+  id: Domain;
+  bay: string;
+  label: string;
+  severity: string;
+  gauge: number;
+  icon: typeof Activity;
+  meters: { label: string; value: number }[];
+  status: string;
+  message: string;
+  protocols: { metric: string; title: string; content: string }[];
+}[] = [
+  {
+    id: "physical",
+    bay: "A1",
+    label: "Physical",
+    severity: "High",
+    gauge: 73,
+    icon: Activity,
+    meters: [
+      { label: "Posture", value: 78 },
+      { label: "Hydration", value: 68 },
+      { label: "Circulation", value: 72 },
+    ],
+    status: "HIGH · High Physical Strain",
+    message: "Back/neck load and recovery limits are approaching breakdown.",
+    protocols: [
+      {
+        metric: "postureLoad",
+        title: "Spinal Alignment Reset",
+        content:
+          "3-minute posture reset: neutral spine, monitor at eye level, hip-knee near 90.",
+      },
+      {
+        metric: "hydrationDeficit",
+        title: "Hydration Recovery",
+        content: "300–500ml water in 15 minutes. Electrolytes if session > 3h.",
+      },
+      {
+        metric: "circulationRisk",
+        title: "Circulation Microbreak",
+        content: "Every 30–45 min stand, walk 2 min, calf/hip mobility.",
+      },
+    ],
+  },
+  {
+    id: "mental",
+    bay: "A2",
+    label: "Mental",
+    severity: "High",
+    gauge: 68,
+    icon: Cpu,
+    meters: [
+      { label: "Focus", value: 38 },
+      { label: "Load", value: 71 },
+      { label: "Switch", value: 64 },
+    ],
+    status: "HIGH · High Cognitive Load",
+    message: "Decision fatigue and switching are reducing quality.",
+    protocols: [
+      {
+        metric: "focusCapacity",
+        title: "Cognitive Context Reset",
+        content:
+          "Step away 5 minutes. Resume with one task and a stop condition.",
+      },
+      {
+        metric: "cognitiveLoad",
+        title: "Complexity Decomposition",
+        content: "Break work into units. Checkpoint after each.",
+      },
+      {
+        metric: "contextSwitchRate",
+        title: "Task Switching Dampener",
+        content: "45-minute single-task blocks. Mute notifications.",
+      },
+    ],
+  },
+  {
+    id: "emotional",
+    bay: "A3",
+    label: "Emotional",
+    severity: "Moderate",
+    gauge: 58,
+    icon: Wind,
+    meters: [
+      { label: "Stress", value: 58 },
+      { label: "Friction", value: 52 },
+      { label: "Debt", value: 66 },
+    ],
+    status: "MODERATE · Recoverable Emotional Fatigue",
+    message: "Short decompression recommended.",
+    protocols: [
+      {
+        metric: "recoveryDebt",
+        title: "Recovery Debt Clearance",
+        content: "8–12 minutes off-screen. Walk. Hydrate.",
+      },
+      {
+        metric: "stressIndex",
+        title: "Stress Decompression",
+        content:
+          "Two cycles of 4-7-8, then lower-pressure work for 10 minutes.",
+      },
+      {
+        metric: "frustrationLevel",
+        title: "Frustration Interrupt",
+        content:
+          "Write the failure point, expected behavior, one tiny experiment.",
+      },
+    ],
+  },
+  {
+    id: "environmental",
+    bay: "A4",
+    label: "Environment",
+    severity: "High",
+    gauge: 64,
+    icon: Lamp,
+    meters: [
+      { label: "Noise", value: 62 },
+      { label: "Light", value: 58 },
+      { label: "Ergo", value: 38 },
+    ],
+    status: "HIGH · Disruptive Environment",
+    message: "Noise and lighting are undermining performance.",
+    protocols: [
+      {
+        metric: "noiseDistractionIndex",
+        title: "Noise Isolation",
+        content: "Headphones, quieter desk, or white noise.",
+      },
+      {
+        metric: "workspaceErgonomics",
+        title: "Ergonomic Optimization",
+        content: "Chair, monitor height, keyboard/mouse position.",
+      },
+      {
+        metric: "lightingStrain",
+        title: "Visual Lighting Correction",
+        content: "Diffuse light, cut glare, match monitor to room.",
+      },
+    ],
+  },
+];
+
+function Gauge({ value, active }: { value: number; active: boolean }) {
+  const r = 18;
+  const c = 2 * Math.PI * r;
+  const offset = c - (value / 100) * c;
+
+  return (
+    <svg viewBox="0 0 48 48" className="size-12 shrink-0" aria-hidden>
+      <circle
+        cx="24"
+        cy="24"
+        r={r}
+        fill="none"
+        className="stroke-zinc-200 dark:stroke-zinc-700"
+        strokeWidth="4"
+      />
+      <circle
+        cx="24"
+        cy="24"
+        r={r}
+        fill="none"
+        className={active ? "stroke-orange-500" : "stroke-zinc-500"}
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeDasharray={c}
+        strokeDashoffset={offset}
+        transform="rotate(-90 24 24)"
+      />
+      <text
+        x="24"
+        y="27"
+        textAnchor="middle"
+        className="fill-zinc-900 dark:fill-zinc-100 font-mono"
+        fontSize="9"
+        fontWeight="500"
+      >
+        {value}
+      </text>
+    </svg>
+  );
+}
 
 export default function LandingPage() {
+  const [domain, setDomain] = useState<Domain>("physical");
+  const active = useMemo(
+    () => BAYS.find((b) => b.id === domain) ?? BAYS[0],
+    [domain]
+  );
+
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white transition-colors duration-500">
-      {/* --- Hero Section --- */}
-      <main className="max-w-[1400px] mx-auto px-10 pt-20 pb-32 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-        <div className="space-y-8">
-          <h1 className="text-5xl md:text-7xl leading-none font-mono">
-            <span className="bg-clip-text text-transparent bg-gradient-to-b from-black to-zinc-500 dark:from-white dark:to-zinc-600">
-              DevPulse
+    <div className="min-h-screen bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      <header className="sticky top-0 z-40 border-b border-zinc-200 bg-zinc-100/85 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/85">
+        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 py-3 sm:px-8">
+          <Link href="/" className="flex items-center gap-2 font-mono text-sm">
+            <span className="flex size-7 items-center justify-center rounded-md border border-zinc-300 text-[11px] dark:border-zinc-700">
+              DP
             </span>
-            <br />
-            <span className="text-sm md:text-xl tracking-[0.3em] text-orange-500 dark:text-orange-400 block mt-2 font-mono opacity-80">
-              Without the slop.
-            </span>
-          </h1>
-          <p className="max-w-md text-xl text-neutral-500 dark:text-zinc-400 leading-relaxed font-mono">
-            Low-latency wellness protocols for high-output engineers. Refactor
-            your lifestyle with{" "}
-            <span className="text-emerald-500">zero-slop</span> logic. Optimized
-            for dark mode and local session-based processing.
-          </p>
-          <div className="flex items-center gap-6 pt-4">
-            <Link href="/get-started">
-              <Button
-                size="lg"
-                className="h-14 px-8 text-lg bg-black dark:bg-white text-white dark:text-black rounded-xl hover:scale-105 transition-transform font-mono"
-              >
-                Let&apos;s Begin
-              </Button>
+            DevPulse
+          </Link>
+          <nav className="hidden items-center gap-8 font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-500 md:flex">
+            <a href="#product">Product</a>
+            <a href="#method">Method</a>
+            <a href="#why">Why it exists</a>
+          </nav>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/sign-in"
+              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 sm:inline-flex"
+            >
+              Sign in
             </Link>
+            <Link
+              href="/sign-up"
+              className="inline-flex min-h-10 items-center rounded-full bg-zinc-900 px-4 font-mono text-[11px] uppercase tracking-[0.2em] text-white dark:bg-white dark:text-zinc-900"
+            >
+              Try free
+            </Link>
+            <div className="flex items-center gap-4">
+              <ModeToggle />
+            </div>
           </div>
         </div>
-        {/* RIGHT: The Floating Card with Mock Content */}
-        <div className="relative group max-w-lg w-full">
-          {/* Subtle Glow for Dark Mode */}
-          <div className="absolute -inset-4 bg-gradient-to-tr from-emerald-500/20 to-blue-500/20 rounded-[3rem] blur-2xl opacity-0 dark:opacity-40 group-hover:opacity-60 transition-opacity" />
+      </header>
 
-          <div className="relative bg-white dark:bg-zinc-900 border border-neutral-100 dark:border-zinc-800 rounded-[2.5rem] shadow-2xl overflow-hidden aspect-[4/3] transition-colors flex flex-col">
-            {/* Browser Header */}
-            <div className="p-4 border-b border-neutral-50 dark:border-zinc-800 flex items-center justify-between bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md">
-              <div className="flex gap-1.5">
-                <div className="h-2.5 w-2.5 rounded-full bg-red-400/50" />
-                <div className="h-2.5 w-2.5 rounded-full bg-yellow-400/50" />
-                <div className="h-2.5 w-2.5 rounded-full bg-green-400/50" />
-              </div>
-              <div className="flex items-center gap-2">
-                <Activity className="h-3 w-3 text-emerald-500" />
-                <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase">
-                  Protocol: Active
-                </span>
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-8">
+        <section className="grid gap-10 py-12 lg:grid-cols-2 lg:items-end lg:py-16">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-orange-500">
+              Protocol engine · not a chatbot
+            </p>
+            <h1 className="mt-5 max-w-[16ch] text-5xl font-medium leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+              Burnout has metrics. Treat it like a production incident.
+            </h1>
+          </div>
+          <div className="max-w-md lg:justify-self-end">
+            <p className="font-mono text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+              DevPulse scores a coding session across four domains, retrieves
+              only the protocols your numbers trip, then lets a model narrate
+              the ranked result — never invent wellness. Sign up. Try three real
+              turns free.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/sign-up"
+                className="inline-flex min-h-12 items-center rounded-full bg-zinc-900 px-7 font-mono text-[11px] uppercase tracking-[0.24em] text-white dark:bg-white dark:text-zinc-900"
+              >
+                Try free
+              </Link>
+              <a
+                href="#product"
+                className="inline-flex min-h-12 items-center rounded-full border border-zinc-300 px-6 font-mono text-[11px] uppercase tracking-[0.24em] dark:border-zinc-700"
+              >
+                Inspect the system
+              </a>
+            </div>
+            <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+              No card · 3 protocol turns · telemetry stays on-session
+            </p>
+          </div>
+        </section>
+
+        <section
+          id="product"
+          className="overflow-hidden rounded-[32px] border border-zinc-200 bg-zinc-50 dark:border-zinc-800  dark:bg-zinc-900"
+        >
+          <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-[1.05fr_1.1fr_0.95fr]">
+            <div>
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-400">
+                Telemetry bays · select a domain
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {BAYS.map((d) => {
+                  const selected = d.id === domain;
+                  const Icon = d.icon;
+                  return (
+                    <button
+                      key={d.id}
+                      type="button"
+                      onClick={() => setDomain(d.id)}
+                      className={`flex flex-col gap-2 rounded-[18px] border p-2.5 text-left ${
+                        selected
+                          ? "border-orange-500 bg-white dark:bg-zinc-800"
+                          : "border-zinc-200 bg-white/80 dark:border-zinc-700 dark:bg-zinc-800/80"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Gauge value={d.gauge} active={selected} />
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <Icon className="size-3 text-zinc-500" />
+                            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-400">
+                              {d.bay}
+                            </span>
+                          </div>
+                          <p className="truncate text-sm font-medium">
+                            {d.label}
+                          </p>
+                          <p className="font-mono text-[9px] uppercase text-zinc-400">
+                            {d.severity}
+                          </p>
+                        </div>
+                      </div>
+                      {d.meters.map((m) => (
+                        <div key={m.label}>
+                          <div className="flex justify-between font-mono text-[9px] uppercase text-zinc-400">
+                            <span>{m.label}</span>
+                            <span>{m.value}</span>
+                          </div>
+                          <div className="mt-1 h-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+                            <div
+                              className="h-full bg-zinc-700 dark:bg-zinc-300"
+                              style={{ width: `${m.value}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Mock Conversation Content */}
-            <div className="p-6 overflow-y-auto space-y-6 flex-1 font-mono">
-              {/* User Message */}
-              <div className="flex justify-end">
-                <div className="bg-zinc-100 dark:bg-zinc-800 px-4 py-2 rounded-2xl rounded-tr-none max-w-[80%]">
-                  <p className="text-[11px] text-zinc-600 dark:text-zinc-300">
-                    I have been staring at code for 8 hours and my brain feels
-                    fried.
+            <div className="flex items-center justify-center">
+              <div className="relative w-full max-w-[440px] rounded-[28px] border border-zinc-200 bg-white px-6 py-8 dark:border-zinc-700 dark:bg-zinc-800 sm:px-9 sm:py-10">
+                <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-orange-500 text-center">
+                  Without the slop
+                </p>
+                <p className="mt-3 text-center text-3xl font-medium sm:text-4xl">
+                  The Protocol
+                  <br />
+                  Computer
+                </p>
+                <p className="mx-auto mt-4 max-w-[34ch] text-center font-mono text-sm text-zinc-500">
+                  Click a bay. Metrics fire the knowledge base. The model only
+                  narrates what retrieval already ranked.
+                </p>
+                <div className="mt-7 rounded-[16px] bg-zinc-900 px-4 py-4 text-center dark:bg-black">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-orange-400">
+                    {active.status}
+                  </p>
+                  <p className="mt-2 font-mono text-[11px] text-zinc-100">
+                    {active.message}
                   </p>
                 </div>
               </div>
+            </div>
 
-              {/* AI Response */}
-              <div className="flex justify-start">
-                <div className="bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100/50 dark:border-emerald-500/20 px-4 py-4 rounded-2xl rounded-tl-none max-w-[90%]">
-                  <div className="space-y-3">
-                    <p className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
-                      OPTIMIZATION SEQUENCE INITIATED:
+            <div>
+              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-400 lg:text-right">
+                Ranked protocols · {active.protocols.length} live
+              </p>
+              <div className="flex flex-col gap-3">
+                {active.protocols.map((p, i) => (
+                  <article
+                    key={p.title}
+                    className="rounded-[22px] border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800"
+                  >
+                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orange-500">
+                      Slot 0{i + 1} · {p.metric}
                     </p>
-                    <ul className="space-y-2 text-[10px] text-zinc-500 dark:text-zinc-400">
-                      <li className="flex gap-2">
-                        <span className="text-emerald-500">01</span>
-                        <span>Hydration + Electrolyte check.</span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="text-emerald-500">02</span>
-                        <span>Box Breathing (4-4-4-4) for 2 minutes.</span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="text-emerald-500">03</span>
-                        <span>Distance Vision Reset: Look 20ft away.</span>
-                      </li>
-                    </ul>
-                    <p className="text-[9px] pt-2 text-emerald-600/70 dark:text-emerald-400/50 italic">
-                      Wellness Protocol Updated.
+                    <h3 className="mt-2 text-sm font-medium">{p.title}</h3>
+                    <p className="mt-3 text-xs leading-relaxed text-zinc-500">
+                      {p.content}
                     </p>
-                  </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-4 border-t border-zinc-200 px-6 py-4 font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-400 dark:border-zinc-800">
+            <span className="inline-flex items-center gap-2">
+              <Droplets className="size-3 text-emerald-500" />
+              Session local
+            </span>
+            <span className="hidden sm:inline">Guest · 3 protocol turns</span>
+            <span className="inline-flex items-center gap-2">
+              <Eye className="size-3" />
+              No generic advice
+            </span>
+          </div>
+        </section>
+
+        <section
+          id="method"
+          className="border-t border-zinc-200 py-20 dark:border-zinc-800"
+        >
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-zinc-400">
+            Method
+          </p>
+          <h2 className="mt-3 max-w-[20ch] text-3xl font-medium sm:text-4xl">
+            Three layers. Chat is the last one.
+          </h2>
+          <ol className="mt-12 grid gap-4 md:grid-cols-3">
+            {[
+              [
+                "01",
+                "Telemetry",
+                "Stack, hours, and twelve signals across four domains. Diagnosis, not a vibe check.",
+              ],
+              [
+                "02",
+                "Retrieval",
+                "Knowledge-base rules fire only when a metric crosses a threshold. Top three protocols.",
+              ],
+              [
+                "03",
+                "Narration",
+                "The model explains those protocols in your words. It cannot invent a fourth.",
+              ],
+            ].map(([n, title, body]) => (
+              <li
+                key={n}
+                className="rounded-[24px] border border-zinc-200 bg-white px-6 py-8 dark:border-zinc-800 dark:bg-zinc-900"
+              >
+                <p className="font-mono text-[11px] text-orange-500">{n}</p>
+                <h3 className="mt-4 text-xl font-medium">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-zinc-500">
+                  {body}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section
+          id="why"
+          className="border-t border-zinc-200 py-20 dark:border-zinc-800"
+        >
+          <div className="grid gap-12 lg:grid-cols-2">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-zinc-400">
+                Why it exists
+              </p>
+              <h2 className="mt-3 text-3xl font-medium sm:text-4xl">
+                Generic AI will tell any engineer to drink water. That is not a
+                product.
+              </h2>
+              <p className="mt-5 max-w-md font-mono text-sm leading-relaxed text-zinc-500">
+                Lost hours after an eight-hour block: posture, switching,
+                recovery debt. DevPulse is the incident runbook for that machine
+                — you.
+              </p>
+            </div>
+            <div className="overflow-hidden rounded-[24px] border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+              <div className="grid grid-cols-2 border-b border-zinc-200 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400 dark:border-zinc-800">
+                <div className="border-r border-zinc-200 px-5 py-3 dark:border-zinc-800">
+                  Wellness bot
+                </div>
+                <div className="px-5 py-3 text-zinc-900 dark:text-zinc-100">
+                  DevPulse
                 </div>
               </div>
-
-              {/* Animated Loading Indicator */}
-              <div className="flex justify-start animate-pulse">
-                <div className="h-2 w-12 bg-zinc-100 dark:bg-zinc-800 rounded-full" />
-              </div>
+              {[
+                ["Open-ended chat", "Ranked protocols from your metrics"],
+                ["Same answer for everyone", "Retrieval gated by thresholds"],
+                ["Motivation copy", "Named intervention + source"],
+                ["Account to say hello", "Landing first, then try free"],
+              ].map(([left, right]) => (
+                <div
+                  key={left}
+                  className="grid grid-cols-2 border-b border-zinc-200 last:border-0 dark:border-zinc-800"
+                >
+                  <p className="border-r border-zinc-200 px-5 py-4 text-sm text-zinc-500 dark:border-zinc-800">
+                    {left}
+                  </p>
+                  <p className="px-5 py-4 text-sm">{right}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </main>
-      {/* --- Developer-Centric Health Section --- */}
-      <section className="max-w-[1400px] mx-auto px-10 py-24 border-t border-neutral-100 dark:border-zinc-900">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 font-mono">
-          {/* Feature 1: The Logic */}
-          <div className="space-y-4 group">
-            <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform">
-              <span className="text-emerald-500 text-xs font-bold">
-                {"{ }"}
-              </span>
-            </div>
-            <h3 className="text-lg font-bold tracking-tight">
-              Debug Your Burnout
-            </h3>
-            <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
-              Stop treating symptoms. I help you find the{" "}
-              <span className="text-emerald-500">root cause</span> of mental
-              fatigue by analyzing your daily development cycles.
-            </p>
-          </div>
+        </section>
 
-          {/* Feature 2: The Speed */}
-          <div className="space-y-4 group">
-            <div className="h-10 w-10 rounded-lg bg-orange-500/10 flex items-center justify-center border border-orange-500/20 group-hover:scale-110 transition-transform">
-              <span className="text-orange-500 text-xs font-bold">01</span>
-            </div>
-            <h3 className="text-lg font-bold tracking-tight">
-              Zero-Slop Protocols
-            </h3>
-            <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
-              No generic advice. Get high-performance wellness{" "}
-              <span className="text-orange-500">scripts</span>—from posture
-              correction to bio-hacked nutrition for long coding sessions.
-            </p>
-          </div>
-
-          {/* Feature 3: The Security */}
-          <div className="space-y-4 group">
-            <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:scale-110 transition-transform">
-              <span className="text-blue-500 text-xs font-bold">sudo</span>
-            </div>
-            <h3 className="text-lg font-bold tracking-tight">
-              Privatized Health Data
-            </h3>
-            <p className="text-sm text-neutral-500 dark:text-zinc-500 leading-relaxed">
-              Your telemetry is stored{" "}
-              <span className="text-blue-500">per-session </span> and not
-              exposed externally.
-            </p>
-          </div>
-        </div>
-
-        {/* --- The "Code vs Health" Comparison Section --- */}
-        <div className="mt-32 p-12 bg-neutral-50 dark:bg-zinc-900/30 rounded-[3rem] border border-neutral-100 dark:border-zinc-800 flex flex-col items-center text-center">
-          <div className="max-w-2xl space-y-6">
-            <h2 className="text-3xl md:text-4xl font-mono tracking-tighter">
-              A Great Developer is a{" "}
-              <span className="text-emerald-500">Healthy</span> Developer.
-            </h2>
-            <p className="text-neutral-500 dark:text-zinc-400 font-mono text-sm leading-relaxed">
-              We spend hours refactoring our code, optimizing for 0.1ms
-              performance gains. It is time to apply that same{" "}
-              <span className="text-orange-500">logic</span> to the most
-              important hardware you own: your body.
-            </p>
-
-            <div className="grid grid-cols-2 gap-4 pt-6 text-[10px] font-mono uppercase tracking-widest text-neutral-400">
-              <div className="border border-neutral-200 dark:border-zinc-800 p-4 rounded-2xl">
-                Code Quality: <span className="text-emerald-500">High</span>
-              </div>
-              <div className="border border-neutral-200 dark:border-zinc-800 p-4 rounded-2xl">
-                System Health:{" "}
-                <span className="text-orange-500">Optimizing...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+        <section className="mb-8 rounded-[32px] bg-zinc-900 px-6 py-14 text-white dark:bg-black sm:px-12">
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-orange-400">
+            Access
+          </p>
+          <h2 className="mt-4 max-w-[18ch] text-3xl font-medium sm:text-4xl">
+            See the landing. Sign up. Load telemetry. Then the app.
+          </h2>
+          <p className="mt-4 max-w-lg font-mono text-sm leading-relaxed text-zinc-400">
+            Try free is an account plus three retrieval-backed turns. Greetings
+            do not count.
+          </p>
+          <Link
+            href="/get-started"
+            className="mt-8 inline-flex min-h-12 items-center rounded-full bg-white px-8 font-mono text-[11px] uppercase tracking-[0.24em] text-zinc-900"
+          >
+            Try free
+          </Link>
+        </section>
+      </div>
     </div>
   );
 }

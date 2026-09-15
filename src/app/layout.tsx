@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -33,36 +34,37 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
-        <ThemeProvider
+        <ClerkProvider>
+          <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        >
+          >
           <SystemProvider>
-            <Header />
-            {children}
-            <Footer />
+          {children}
+          <Footer />
           </SystemProvider>
-        </ThemeProvider>
-        <Script id="tawk-to" strategy="afterInteractive">
+          </ThemeProvider>
+          <Script id="tawk-to" strategy="afterInteractive">
           {`
-    var Tawk_API = Tawk_API || {};
-    var Tawk_LoadStart = new Date();
+          var Tawk_API = Tawk_API || {};
+          var Tawk_LoadStart = new Date();
 
-    (function(){
-      var s1 = document.createElement("script");
-      var s0 = document.getElementsByTagName("script")[0];
+          (function(){
+          var s1 = document.createElement("script");
+          var s0 = document.getElementsByTagName("script")[0];
 
-      s1.async = true;
-      s1.src='https://embed.tawk.to/6a67c54aaa7dbb1d404d07a3/1juillb5p';
-      s1.charset = 'UTF-8';
-      s1.setAttribute('crossorigin','*');
+          s1.async = true;
+          s1.src='https://embed.tawk.to/6a67c54aaa7dbb1d404d07a3/1juillb5p';
+          s1.charset = 'UTF-8';
+          s1.setAttribute('crossorigin','*');
 
-      s0.parentNode.insertBefore(s1,s0);
-    })();
-  `}
-        </Script>
+          s0.parentNode.insertBefore(s1,s0);
+          })();
+          `}
+          </Script>
+        </ClerkProvider>
       </body>
     </html>
   );
