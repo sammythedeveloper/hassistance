@@ -616,7 +616,7 @@ export default function DemoPage() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
           </Link>
-          <Link href="" className="flex items-center gap-2 font-mono text-sm">
+          <Link href="/get-started" className="flex items-center gap-2 font-mono text-sm">
             <span className="flex size-7 items-center justify-center rounded-md border border-zinc-300 text-[11px] dark:border-zinc-700">
               DP
             </span>

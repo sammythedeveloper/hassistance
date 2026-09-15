@@ -1,28 +1,30 @@
 // prisma/schema.prisma
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
-  // This is the ONLY thing we are adding for AWS
-  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  // Keep this empty like you had it, but don't comment it out
 }
 
 model Conversation {
   id        String    @id @default(cuid())
+  userId    String
   sessionId String    @unique
-  category  String    
+  category  String
+  isTrial   Boolean   @default(false)
   createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   messages  Message[]
+
+  @@index([userId])
 }
 
 model Message {
   id             String       @id @default(cuid())
-  role           String       
+  role           String
   content        String       @db.Text
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)

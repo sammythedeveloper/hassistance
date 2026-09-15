@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { handleHealthConsultation } from "@/actions/chat";
 import type { Category } from "@/lib/telemetry";
 
@@ -15,6 +16,14 @@ function isCategory(value: string): value is Category {
 
 export async function POST(req: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Sign in required." },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const category = String(body?.category ?? "").toLowerCase();
     const issue = String(body?.issue ?? "").trim();
@@ -29,7 +38,7 @@ export async function POST(req: Request) {
     const sessionId =
       typeof body?.sessionId === "string" && body.sessionId.trim().length > 0
         ? body.sessionId
-        : "anonymous-session";
+        : `session-${userId}`;
 
     const baseConfig = body?.context?.baseConfig ?? {};
     const categoryInputs = body?.context?.categoryInputs ?? {};

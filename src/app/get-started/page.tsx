@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { Activity, Cpu, Wind, Lamp, ArrowRight, LogOut } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 
@@ -49,9 +48,7 @@ const DOMAINS = [
 export default function GetStartedPage() {
   const [showSignOutModal, setShowSignOutModal] = useState(false);
   const { signOut } = useClerk();
-  const router = useRouter();
 
-  // Handle ESC key press to close modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setShowSignOutModal(false);
@@ -63,20 +60,16 @@ export default function GetStartedPage() {
   }, [showSignOutModal]);
 
   const handleSignOut = async () => {
-    // Clear local storage & session state safely
     if (typeof window !== "undefined") {
       localStorage.clear();
       sessionStorage.clear();
     }
-
-    // Sign out via Clerk with built-in redirection
-    await signOut({ redirectUrl: "/sign-in" });
+    await signOut({ redirectUrl: "/" });
   };
 
   return (
     <div className="min-h-dvh bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
-      {/* Header — matches landing/about */}
-      <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-zinc-100/80 py-6 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80">
+      <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-zinc-100/80 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80">
         <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-8">
           <Link href="/" className="flex items-center gap-2 font-mono text-sm">
             <span className="flex size-7 items-center justify-center rounded-md border border-zinc-300 text-[11px] dark:border-zinc-700">
@@ -84,20 +77,22 @@ export default function GetStartedPage() {
             </span>
             DevPulse
           </Link>
-          <div className="flex items-center gap-3">
-            {/* Desktop Sign Out */}
+
+          <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => setShowSignOutModal(true)}
-              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 hover:text-black dark:hover:text-white sm:inline-flex"
+              className="hidden h-10 items-center gap-2 px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 sm:inline-flex"
             >
-              <span>Sign Out</span>
+              <LogOut className="size-3.5" />
+              Sign out
             </button>
 
-            {/* Mobile Sign Out Icon */}
             <button
+              type="button"
               onClick={() => setShowSignOutModal(true)}
-              className="flex min-h-10 items-center p-2 text-zinc-500 hover:text-black dark:hover:text-white sm:hidden"
-              aria-label="Sign Out"
+              className="inline-flex size-10 items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 sm:hidden"
+              aria-label="Sign out"
             >
               <LogOut className="size-4" />
             </button>
@@ -108,7 +103,6 @@ export default function GetStartedPage() {
       </header>
 
       <main className="mx-auto max-w-[1280px] px-4 py-12 sm:px-8 sm:py-16">
-        {/* Intro */}
         <div className="max-w-2xl">
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-orange-500">
             Session · Initialize
@@ -123,7 +117,6 @@ export default function GetStartedPage() {
           </p>
         </div>
 
-        {/* Domain grid */}
         <div className="mt-14 grid gap-4 sm:grid-cols-2">
           {DOMAINS.map((d) => {
             const Icon = d.icon;
@@ -136,7 +129,7 @@ export default function GetStartedPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="flex size-10 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-700">
-                      <Icon className="size-4 text-zinc-500 group-hover:text-orange-500" />
+                      <Icon className="size-4 text-zinc-500 transition group-hover:text-orange-500" />
                     </div>
                     <div>
                       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">
@@ -174,49 +167,46 @@ export default function GetStartedPage() {
           })}
         </div>
 
-        {/* Footer note */}
-        <div className="mt-12 flex flex-col gap-2 border-t border-zinc-200 pt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 dark:border-zinc-800 sm:flex-row sm:items-center sm:justify-between">
-          <span>Telemetry stays on-session</span>
-          <span>3 protocol turns · no card required</span>
+        <div className="mt-12 border-t border-zinc-200 pt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 dark:border-zinc-800">
+          Select a domain to load telemetry and begin.
         </div>
       </main>
 
-      {/* Sign Out Confirmation Modal */}
       {showSignOutModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setShowSignOutModal(false)}
         >
           <div
             role="dialog"
             aria-modal="true"
-            className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
+            className="w-full max-w-md rounded-[24px] border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="font-mono text-xs uppercase tracking-widest text-orange-500">
-              Terminal Session
-            </h3>
-            <h2 className="mt-2 text-xl font-medium text-zinc-900 dark:text-zinc-100">
-              Terminate Active Session?
-            </h2>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Signing out will clear your active telemetry state and local
-              session cache.
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orange-500">
+              Session
             </p>
-            <div className="mt-6 flex items-center justify-end gap-3 font-mono text-xs">
+            <h2 className="mt-2 text-xl font-medium tracking-tight">
+              Sign out of DevPulse?
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              This ends the current session and clears local telemetry state on
+              this device.
+            </p>
+            <div className="mt-6 flex items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setShowSignOutModal(false)}
-                className="rounded-lg border border-zinc-300 px-4 py-2.5 uppercase tracking-wider text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                className="h-10 rounded-full border border-zinc-300 px-4 font-mono text-[11px] uppercase tracking-[0.18em] dark:border-zinc-700"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="rounded-lg bg-orange-500 px-4 py-2.5 font-semibold uppercase tracking-wider text-zinc-950 hover:bg-orange-400"
+                className="h-10 rounded-full bg-zinc-900 px-5 font-mono text-[11px] uppercase tracking-[0.18em] text-white dark:bg-zinc-50 dark:text-zinc-900"
               >
-                Sign Out
+                Sign out
               </button>
             </div>
           </div>

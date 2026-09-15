@@ -1,12 +1,13 @@
-// prisma.config.ts
-import { config } from "dotenv";
+import "dotenv/config";
 import { defineConfig } from "@prisma/config";
 
-// Force dotenv to look at your specific Next.js env file
-config({ path: ".env.local" });
-
 export default defineConfig({
+  earlyAccess: true,
+  schema: {
+    kind: "single",
+    filePath: "./prisma/schema.prisma",
+  },
   datasource: {
-    url: process.env.DATABASE_URL,
+    url: process.env.DATABASE_URL!,
   },
 });

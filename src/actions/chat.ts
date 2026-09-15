@@ -2,6 +2,7 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 import { retrieveRelevantProtocols } from "@/lib/retriever";
 import {
   calculateDeveloperMetrics,
@@ -85,7 +86,13 @@ function isConversationClosingMessage(text: string): boolean {
     "it was really helpful",
   ];
 
-  const continuationSignals = ["?", "one more", "another question", "also", "but "];
+  const continuationSignals = [
+    "?",
+    "one more",
+    "another question",
+    "also",
+    "but ",
+  ];
 
   if (continuationSignals.some((s) => lower.includes(s))) return false;
   return closingSignals.some((s) => lower.includes(s));
@@ -123,7 +130,10 @@ function classifyIntent(text: string): Intent {
   return "developer_context";
 }
 
-function formatCategoryInputs(category: Category, metrics: TelemetryMetrics): string {
+function formatCategoryInputs(
+  category: Category,
+  metrics: TelemetryMetrics
+): string {
   switch (category) {
     case "physical":
       return `Posture Load: ${metrics.physical.postureLoad}% | Hydration Deficit: ${metrics.physical.hydrationDeficit}% | Circulation Risk: ${metrics.physical.circulationRisk}%`;
@@ -136,7 +146,10 @@ function formatCategoryInputs(category: Category, metrics: TelemetryMetrics): st
   }
 }
 
-function formatCategorySystemLoad(category: Category, metrics: TelemetryMetrics): string {
+function formatCategorySystemLoad(
+  category: Category,
+  metrics: TelemetryMetrics
+): string {
   switch (category) {
     case "physical":
       return `Body Strain: ${metrics.systemLoad.physical.bodyStrain}% | Recovery Capacity: ${metrics.systemLoad.physical.recoveryCapacity}%`;
@@ -149,11 +162,17 @@ function formatCategorySystemLoad(category: Category, metrics: TelemetryMetrics)
   }
 }
 
-function getCategoryStatus(category: Category, metrics: TelemetryMetrics): DomainStatus {
+function getCategoryStatus(
+  category: Category,
+  metrics: TelemetryMetrics
+): DomainStatus {
   return metrics.status[category];
 }
 
-function getCategoryFooterSignal(category: Category, metrics: TelemetryMetrics): string {
+function getCategoryFooterSignal(
+  category: Category,
+  metrics: TelemetryMetrics
+): string {
   switch (category) {
     case "physical":
       return `BODY STRAIN ${metrics.systemLoad.physical.bodyStrain}%`;
@@ -237,7 +256,9 @@ One sentence on what the user should watch over the next 30–90 minutes.
 ---
 _Disclaimer: I'm an AI assistant, not a medical professional. If symptoms persist, consult a qualified healthcare provider._
 
-STATUS: ${categoryStatus.label} (${categoryStatus.severity}) | SIGNAL: ${footerSignal} | SYNC: ${new Date().toLocaleTimeString()}
+STATUS: ${categoryStatus.label} (${
+    categoryStatus.severity
+  }) | SIGNAL: ${footerSignal} | SYNC: ${new Date().toLocaleTimeString()}
 `;
 }
 
@@ -248,15 +269,21 @@ STATUS: ${categoryStatus.label} (${categoryStatus.severity}) | SIGNAL: ${footerS
 export async function handleHealthConsultation(
   formData: HealthConsultationRequest
 ): Promise<HealthConsultationResponse> {
+  const { userId } = await auth();
+  if (!userId) {
+    return {
+      success: false,
+      error: "Unauthorized. Sign in required.",
+    };
+  }
+
   if (!process.env.GEMINI_API_KEY) {
     return {
       success: false,
       error: "Protocol Connection Failure: Missing Gemini API key.",
     };
   }
-
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
   try {
     // 1. Telemetry
     const metrics = calculateDeveloperMetrics(
@@ -268,7 +295,10 @@ export async function handleHealthConsultation(
     );
 
     // 2. Retrieval
-    const relevantProtocols = retrieveRelevantProtocols(metrics, formData.category);
+    const relevantProtocols = retrieveRelevantProtocols(
+      metrics,
+      formData.category
+    );
 
     // 3. Early exits (no model call)
     const intent = classifyIntent(formData.issue);
@@ -320,7 +350,9 @@ export async function handleHealthConsultation(
         "User asked an unrelated topic. Reframe once into developer productivity or cognitive load context, then stop.";
     }
 
-    const recentConversationContext = formatConversationHistory(formData.history);
+    const recentConversationContext = formatConversationHistory(
+      formData.history
+    );
     const modelInput = recentConversationContext
       ? `RECENT CONVERSATION CONTEXT:\n${recentConversationContext}\n\nCURRENT USER MESSAGE:\n${rewrittenInput}`
       : rewrittenInput;
