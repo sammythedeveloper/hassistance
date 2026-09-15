@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -51,14 +51,26 @@ export default function GetStartedPage() {
   const { signOut } = useClerk();
   const router = useRouter();
 
-  const handleSignOut = async () => {
-    // Clear local storage keys
-    localStorage.clear();
-    sessionStorage.clear();
+  // Handle ESC key press to close modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowSignOutModal(false);
+    };
+    if (showSignOutModal) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showSignOutModal]);
 
-    // Sign out via Clerk and redirect
-    await signOut();
-    router.push("/sign-in");
+  const handleSignOut = async () => {
+    // Clear local storage & session state safely
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+      sessionStorage.clear();
+    }
+
+    // Sign out via Clerk with built-in redirection
+    await signOut({ redirectUrl: "/sign-in" });
   };
 
   return (
@@ -73,12 +85,23 @@ export default function GetStartedPage() {
             DevPulse
           </Link>
           <div className="flex items-center gap-3">
+            {/* Desktop Sign Out */}
             <button
               onClick={() => setShowSignOutModal(true)}
-              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase hover:text-black tracking-[0.2em] text-zinc-500 dark:hover:text-white sm:inline-flex"
+              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 hover:text-black dark:hover:text-white sm:inline-flex"
             >
               <span>Sign Out</span>
             </button>
+
+            {/* Mobile Sign Out Icon */}
+            <button
+              onClick={() => setShowSignOutModal(true)}
+              className="flex min-h-10 items-center p-2 text-zinc-500 hover:text-black dark:hover:text-white sm:hidden"
+              aria-label="Sign Out"
+            >
+              <LogOut className="size-4" />
+            </button>
+
             <ModeToggle />
           </div>
         </div>
@@ -107,7 +130,7 @@ export default function GetStartedPage() {
             return (
               <Link
                 key={d.id}
-                href={`/get-started/${d.id}`}
+                href={`/demo/${d.id}`}
                 className="group flex flex-col rounded-[24px] border border-zinc-200 bg-white p-6 transition hover:border-orange-500/60 dark:border-zinc-800 dark:bg-zinc-900 sm:p-8"
               >
                 <div className="flex items-start justify-between gap-4">
@@ -160,8 +183,16 @@ export default function GetStartedPage() {
 
       {/* Sign Out Confirmation Modal */}
       {showSignOutModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowSignOutModal(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3 className="font-mono text-xs uppercase tracking-widest text-orange-500">
               Terminal Session
             </h3>
@@ -174,14 +205,16 @@ export default function GetStartedPage() {
             </p>
             <div className="mt-6 flex items-center justify-end gap-3 font-mono text-xs">
               <button
+                type="button"
                 onClick={() => setShowSignOutModal(false)}
                 className="rounded-lg border border-zinc-300 px-4 py-2.5 uppercase tracking-wider text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleSignOut}
-                className="rounded-lg bg-orange-500 px-4 py-2.5 uppercase tracking-wider text-zinc-950 font-semibold hover:bg-orange-400"
+                className="rounded-lg bg-orange-500 px-4 py-2.5 font-semibold uppercase tracking-wider text-zinc-950 hover:bg-orange-400"
               >
                 Sign Out
               </button>
