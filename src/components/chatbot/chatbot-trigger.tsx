@@ -24,12 +24,14 @@ export function ChatbotTrigger() {
     if (!window.Tawk_API) return;
 
     if (isOpen) {
-      window.Tawk_API.minimize();
-      window.Tawk_API.hideWidget();
+      window.Tawk_API.minimize?.();
+      window.Tawk_API.hideWidget?.();
+      document.body.classList.remove("tawk-open");
       setIsOpen(false);
     } else {
-      window.Tawk_API.maximize();
-      window.Tawk_API.showWidget();
+      window.Tawk_API.showWidget?.();
+      window.Tawk_API.maximize?.();
+      document.body.classList.add("tawk-open");
       setIsOpen(true);
     }
   };
@@ -40,19 +42,19 @@ export function ChatbotTrigger() {
       <button
         onClick={toggleChat}
         aria-label="Toggle Telemetry Assistant"
-        className="group relative flex size-12 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900/90 text-zinc-100 shadow-2xl backdrop-blur-md transition-all hover:scale-105 hover:border-orange-500/50 hover:bg-zinc-800 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900"
+        className="group relative flex size-12 items-center justify-center rounded-full border border-zinc-200 bg-zinc-600/90 text-zinc-100 shadow-2xl backdrop-blur-md transition-all hover:scale-105 hover:border-orange-500/50 hover:bg-zinc-800 active:scale-95 dark:border-zinc-700 dark:bg-zinc-900"
       >
         {/* Live Status Indicator Dot */}
         <span className="absolute right-0.5 top-0.5 flex size-3">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
-          <span className="relative inline-flex size-3 rounded-full border-2 border-zinc-900 bg-orange-500"></span>
+          <span className="relative inline-flex size-3 rounded-full border-2 border-zinc-900 bg-purple-500"></span>
         </span>
 
         {/* Icon Toggle */}
         {isOpen ? (
           <X className="size-5 text-zinc-300 transition-transform group-hover:rotate-90" />
         ) : (
-          <Bot className="size-5 text-orange-400 transition-transform group-hover:scale-110" />
+          <Bot className="size-5 text-orange-400 dark:text-purple-400 transition-transform group-hover:scale-110" />
         )}
 
         {/* Unread Message Badge */}

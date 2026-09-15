@@ -31,41 +31,6 @@ const DOMAINS = [
 export default function AboutPage() {
   return (
     <div className="min-h-dvh bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
-      <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-zinc-100/80 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80">
-        <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-8">
-          <Link href="/" className="flex items-center gap-2 font-mono text-sm">
-            <span className="flex size-7 items-center justify-center rounded-md border border-zinc-300 text-[11px] dark:border-zinc-700">
-              DP
-            </span>
-            DevPulse
-          </Link>
-          <nav className="hidden items-center gap-8 font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-500 md:flex">
-            <Link
-              href="/#product"
-              className="hover:text-zinc-900 dark:hover:text-zinc-100"
-            >
-              Product
-            </Link>
-            <span className="text-zinc-900 dark:text-zinc-100">About</span>
-          </nav>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/sign-in"
-              className="hidden h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 sm:inline-flex"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/sign-up"
-              className="inline-flex h-10 items-center rounded-full bg-zinc-900 px-4 font-mono text-[11px] uppercase tracking-[0.2em] text-white dark:bg-zinc-50 dark:text-zinc-900"
-            >
-              Try free
-            </Link>
-            <ModeToggle />
-          </div>
-        </div>
-      </header>
-
       <main className="mx-auto max-w-[1280px] px-4 py-12 sm:px-8 sm:py-16">
         <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-orange-500">
           System
@@ -264,7 +229,7 @@ export default function AboutPage() {
             </p>
             <Link
               href="/sign-up"
-              className="mt-8 inline-flex h-11 items-center rounded-full bg-zinc-50 px-6 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-900 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-8 inline-flex h-11 items-center rounded-full bg-zinc-50 px-6 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-900 dark:bg-zinc-900  hover:bg-purple-500 hover:dark:bg-green-500 dark:text-zinc-50"
             >
               Try free
             </Link>

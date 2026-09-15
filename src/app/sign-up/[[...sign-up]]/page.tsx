@@ -58,6 +58,8 @@ export default function SignUpPage() {
             routing="path"
             path="/sign-up"
             signInUrl="/sign-in"
+            forceRedirectUrl="/get-started"
+            fallbackRedirectUrl="/get-started"
             appearance={{
               variables: {
                 borderRadius: "1.1rem",

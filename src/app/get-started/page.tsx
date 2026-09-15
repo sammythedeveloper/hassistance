@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
-import { Activity, Cpu, Wind, Lamp, ArrowRight, LogOut } from "lucide-react";
+import { Activity, Cpu, Wind, Lamp, ArrowRight} from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 
 const DOMAINS = [
@@ -69,9 +69,9 @@ export default function GetStartedPage() {
 
   return (
     <div className="min-h-dvh bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
-      <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-zinc-100/80 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80">
+      <header className="sticky top-0 py-6 z-40 border-b border-zinc-200/80 bg-zinc-100/80 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/80">
         <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-4 sm:px-8">
-          <Link href="/" className="flex items-center gap-2 font-mono text-sm">
+          <Link href="" className="flex items-center gap-2 font-mono text-sm">
             <span className="flex size-7 items-center justify-center rounded-md border border-zinc-300 text-[11px] dark:border-zinc-700">
               DP
             </span>
@@ -82,9 +82,8 @@ export default function GetStartedPage() {
             <button
               type="button"
               onClick={() => setShowSignOutModal(true)}
-              className="hidden h-10 items-center gap-2 px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 sm:inline-flex"
+              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] hover:text-black hover:dark:text-purple-500 text-zinc-500 sm:inline-flex"
             >
-              <LogOut className="size-3.5" />
               Sign out
             </button>
 
@@ -94,7 +93,6 @@ export default function GetStartedPage() {
               className="inline-flex size-10 items-center justify-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 sm:hidden"
               aria-label="Sign out"
             >
-              <LogOut className="size-4" />
             </button>
 
             <ModeToggle />
@@ -197,14 +195,14 @@ export default function GetStartedPage() {
               <button
                 type="button"
                 onClick={() => setShowSignOutModal(false)}
-                className="h-10 rounded-full border border-zinc-300 px-4 font-mono text-[11px] uppercase tracking-[0.18em] dark:border-zinc-700"
+                className="h-10 rounded-full border border-zinc-300 px-4 font-mono text-[11px] uppercase tracking-[0.18em] dark:border-zinc-700 hover:bg-green-500 hover:text-white "
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="h-10 rounded-full bg-zinc-900 px-5 font-mono text-[11px] uppercase tracking-[0.18em] text-white dark:bg-zinc-50 dark:text-zinc-900"
+                className="h-10 rounded-full bg-zinc-900 px-5 font-mono text-[11px] uppercase tracking-[0.18em] text-white dark:bg-zinc-50 hover:bg-purple-500 hover:dark:bg-purple-500 hover:dark:text-white dark:text-zinc-900"
               >
                 Sign out
               </button>

@@ -219,13 +219,13 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/sign-in"
-              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 dark:hover:text-white sm:inline-flex"
+              className="hidden min-h-10 items-center px-3 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 hover:text-black dark:hover:text-white sm:inline-flex"
             >
               Sign in
             </Link>
             <Link
               href="/sign-up"
-              className="inline-flex min-h-10 items-center rounded-full bg-zinc-900 px-4 font-mono text-[11px] uppercase tracking-[0.2em] text-white dark:bg-white dark:text-zinc-900 dark:hover:text-orange-500   "
+              className="inline-flex min-h-10 items-center rounded-full bg-zinc-900 px-4 font-mono text-[11px] uppercase tracking-[0.2em] text-white hover:bg-green-500 dark:bg-white dark:text-zinc-900  dark:hover:bg-purple-500 dark:hover:text-white   "
             >
               Try free
             </Link>
@@ -259,7 +259,7 @@ export default function LandingPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/sign-up"
-                className="inline-flex min-h-12 items-center hover:text-black  rounded-full bg-zinc-900 hover:bg-gray-400 px-7 font-mono text-[11px] uppercase tracking-[0.24em] text-white dark:bg-white dark:text-zinc-900"
+                className="inline-flex min-h-12 items-center rounded-full bg-zinc-900 px-7 font-mono text-[11px] uppercase tracking-[0.24em] text-white dark:bg-white hover:bg-green-500 hover:text-white dark:text-zinc-900"
               >
                 Try free
               </Link>
@@ -496,12 +496,29 @@ export default function LandingPage() {
             do not count.
           </p>
           <Link
-            href="/get-started"
-            className="mt-8 inline-flex min-h-12 items-center rounded-full bg-white px-8 font-mono text-[11px] uppercase tracking-[0.24em] text-zinc-900"
+            href="/sign-up"
+            className="mt-8 inline-flex min-h-12 items-center rounded-full bg-white px-8 font-mono text-[11px] uppercase tracking-[0.24em] text-zinc-900 hover:bg-green-500 hover:text-white dark:hover:bg-purple-500 "
           >
             Try free
           </Link>
         </section>
+        <footer className="border-t border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-6 px-4 py-10 font-mono sm:flex-row sm:px-8">
+            <div className="flex flex-wrap justify-center gap-8 text-[11px] uppercase tracking-[0.2em] text-zinc-500">
+              <Link href="/about" className="hover:text-orange-500">
+                About
+              </Link>
+              <Link href="/privacy" className="hover:text-orange-500">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:text-orange-500">
+                Terms
+              </Link>
+            </div>
+
+            <span className="text-[10px] text-zinc-400">© 2026</span>
+          </div>
+        </footer>
       </div>
     </div>
   );

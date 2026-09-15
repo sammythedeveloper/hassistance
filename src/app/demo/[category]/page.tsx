@@ -605,7 +605,7 @@ export default function DemoPage() {
 
   return (
     <div className="flex h-[100dvh] flex-col bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
-      <header className="flex shrink-0 items-center  justify-between gap-4 border-b border-zinc-200 bg-zinc-100/85 px-4 py-6 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/85 sm:px-8">
+      <header className="flex shrink-0 items-center justify-between gap-4 border-b border-zinc-200 bg-zinc-100/85 px-4 py-6 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/85 sm:px-8">
         <div className="flex items-center gap-3">
           <Link href="/get-started">
             <Button

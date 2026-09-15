@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Footer } from "@/components/layout/Footer";
 import { SystemProvider } from "@/context/SystemContext";
 import { ChatbotTrigger } from "@/components/chatbot/chatbot-trigger";
 import { Chatbot } from "@/components/chatbot/chatbot";
@@ -30,11 +29,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
-        <ClerkProvider>
+      <body
+        className="min-h-full flex flex-col bg-white dark:bg-black text-black dark:text-white transition-colors duration-300"
+        suppressHydrationWarning
+      >
+        <ClerkProvider afterSignOutUrl="/">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -46,7 +48,6 @@ export default function RootLayout({
               <ChatbotTrigger />
             </SystemProvider>
           </ThemeProvider>
-          {/* Placed outside ThemeProvider to avoid hydration script conflicts */}
           <Chatbot />
         </ClerkProvider>
       </body>

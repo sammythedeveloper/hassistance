@@ -269,12 +269,9 @@ STATUS: ${categoryStatus.label} (${
 export async function handleHealthConsultation(
   formData: HealthConsultationRequest
 ): Promise<HealthConsultationResponse> {
-  const { userId } = await auth();
-  if (!userId) {
-    return {
-      success: false,
-      error: "Unauthorized. Sign in required.",
-    };
+  const { userId: clerkUserId } = await auth();
+  if (!clerkUserId) {
+    return { success: false, error: "Unauthorized. Sign in required." };
   }
 
   if (!process.env.GEMINI_API_KEY) {
@@ -372,16 +369,30 @@ export async function handleHealthConsultation(
     const result = await model.generateContent(modelInput);
     const responseText = result.response.text();
 
-    // 6. Persist
-    const conversation = await prisma.conversation.upsert({
-      where: { sessionId: formData.sessionId },
-      update: {},
-      create: {
+    const user = await prisma.user.upsert({
+      where: { clerkUserId },
+      update: { lastActiveAt: new Date() },
+      create: { clerkUserId, lastActiveAt: new Date() },
+    });
+    
+    let conversation = await prisma.conversation.findFirst({
+      where: {
+        userId: user.id,
         sessionId: formData.sessionId,
         category: formData.category,
       },
     });
-
+    
+    if (!conversation) {
+      conversation = await prisma.conversation.create({
+        data: {
+          userId: user.id,
+          category: formData.category,
+          sessionId: formData.sessionId,
+        },
+      });
+    }
+    
     await prisma.message.createMany({
       data: [
         {

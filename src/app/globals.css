@@ -4,6 +4,23 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Hide Tawk’s default launcher; we use ChatbotTrigger instead */
+.tawk-button,
+.tawk-min-container,
+iframe[title*="chat widget"],
+div[id^="tawk"] .tawk-button {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* When we explicitly open chat, allow the chat panel (not the bubble) */
+body.tawk-open iframe[title*="chat widget"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

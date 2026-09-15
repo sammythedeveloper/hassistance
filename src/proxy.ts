@@ -1,19 +1,31 @@
-// src/proxy.ts  (or middleware.ts if that’s what you’re running)
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+// src/middleware.ts
+import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-const isPublicRoute = createRouteMatcher([
+const PUBLIC_PATHS = [
   "/",
   "/about",
   "/privacy",
   "/terms",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-]);
+  "/sign-in",
+  "/sign-up",
+];
+
+function isPublic(pathname: string) {
+  if (PUBLIC_PATHS.includes(pathname)) return true;
+  if (pathname.startsWith("/sign-in")) return true;
+  if (pathname.startsWith("/sign-up")) return true;
+  return false;
+}
 
 export default clerkMiddleware(async (auth, req) => {
-  if (!isPublicRoute(req)) {
-    await auth.protect(); // redirects unauthenticated users to sign-in
+  const { pathname } = req.nextUrl;
+
+  if (isPublic(pathname)) {
+    return NextResponse.next();
   }
+
+  await auth.protect();
 });
 
 export const config = {
