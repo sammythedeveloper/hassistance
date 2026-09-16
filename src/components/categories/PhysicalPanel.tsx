@@ -18,13 +18,17 @@ export function PhysicalPanel({
   categoryInputs,
   setCategoryInputs,
 }: PhysicalPanelProps) {
-  const physical = categoryInputs.physical ?? {};
+  const physical = categoryInputs?.physical ?? {
+    postureLoad: metrics.physical.postureLoad,
+    hydrationDeficit: metrics.physical.hydrationDeficit,
+    circulationRisk: metrics.physical.circulationRisk,
+  };
 
   const update = (key: string, value: number) => {
     setCategoryInputs((prev) => ({
       ...prev,
       physical: {
-        ...prev.physical,
+        ...(prev.physical ?? {}),
         [key]: value,
       },
     }));
@@ -32,53 +36,30 @@ export function PhysicalPanel({
 
   return (
     <PanelShell title="Physical System">
-      <div className="space-y-4 text-xs">
-        {/* Posture Load */}
-        <div>
-          <div className="flex justify-between">
-            <span>Posture Load</span>
-            <span>{metrics.physical.postureLoad}%</span>
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={physical.postureLoad ?? metrics.physical.postureLoad}
-            onChange={(e) => update("postureLoad", Number(e.target.value))}
-          />
-        </div>
-
-        {/* Hydration Deficit */}
-        <div>
-          <div className="flex justify-between">
-            <span>Hydration Deficit</span>
-            <span>{metrics.physical.hydrationDeficit}%</span>
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={
-              physical.hydrationDeficit ?? metrics.physical.hydrationDeficit
-            }
-            onChange={(e) => update("hydrationDeficit", Number(e.target.value))}
-          />
-        </div>
-
-        {/* Circulation Risk */}
-        <div>
-          <div className="flex justify-between">
-            <span>Circulation Risk</span>
-            <span>{metrics.physical.circulationRisk}%</span>
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={physical.circulationRisk ?? metrics.physical.circulationRisk}
-            onChange={(e) => update("circulationRisk", Number(e.target.value))}
-          />
-        </div>
+      <div className="space-y-4 text-xs text-zinc-500">
+        {[
+          ["postureLoad", "Posture Load"],
+          ["hydrationDeficit", "Hydration Deficit"],
+          ["circulationRisk", "Circulation Risk"],
+        ].map(([key, label]) => {
+          const value = physical[key as keyof typeof physical] ?? 0;
+          return (
+            <div key={key}>
+              <div className="flex justify-between mb-1">
+                <span>{label}</span>
+                <span>{value}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={value}
+                onChange={(e) => update(key, Number(e.target.value))}
+                className="w-full accent-emerald-500 cursor-pointer"
+              />
+            </div>
+          );
+        })}
       </div>
     </PanelShell>
   );
