@@ -514,6 +514,12 @@ export default function LandingPage() {
               <Link href="/terms" className="hover:text-orange-500">
                 Terms
               </Link>
+              <a
+                href="mailto:samsondev3@gmail.com"
+                className="hover:text-orange-500"
+              >
+                Contact
+              </a>
             </div>
 
             <span className="text-[10px] text-zinc-400">© 2026</span>

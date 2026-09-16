@@ -93,6 +93,12 @@ export default function TermsPage() {
               open. Session tooling — including domain selection, telemetry
               controls, and protocol narration — requires a signed-in user.
             </p>
+
+            <p className="mt-3">
+              DevPulse is currently provided free of charge. We do not charge
+              fees for access to or use of the Service.
+            </p>
+
             <p className="mt-3">
               We may limit free usage (for example, a fixed number of
               retrieval-backed turns). We may suspend or terminate access for
@@ -186,13 +192,18 @@ export default function TermsPage() {
               08 · Limitation of liability
             </h2>
             <p className="mt-3">
-              To the maximum extent permitted by law, DevPulse and its operators
-              are not liable for indirect, incidental, special, consequential,
-              or punitive damages, or for lost profits, data, or session
-              outcomes arising from use of the service. Aggregate liability for
-              claims relating to the service is limited to the greater of
-              amounts you paid us in the twelve months before the claim (if any)
-              or fifty U.S. dollars (US$50).
+              To the maximum extent permitted by applicable law, DevPulse and
+              its operators shall not be liable for any indirect, incidental,
+              special, consequential, exemplary, or punitive damages, or for any
+              loss of profits, revenue, data, goodwill, or session outcomes
+              arising from or related to your use of, or inability to use, the
+              Service. Because DevPulse is provided free of charge and no fees
+              are charged for access to or use of the Service, to the maximum
+              extent permitted by applicable law, the aggregate liability of
+              DevPulse and its operators for any claims arising out of or
+              relating to the Service shall be limited to US$0. Nothing in these
+              Terms excludes or limits liability that cannot lawfully be
+              excluded or limited under applicable law.
             </p>
           </section>
 
