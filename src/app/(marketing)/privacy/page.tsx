@@ -262,10 +262,16 @@ export default function PrivacyPage() {
             <h2 className="font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400">
               11 · Contact
             </h2>
-            <p className="mt-3">
-              For privacy requests, use the contact method published on the site
-              or your support channel. Include enough detail for us to verify
-              the account and fulfill the request.
+            <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              For privacy requests, product questions, or account issues, email{" "}
+              <a
+                href="mailto:samsondev3@gmail.com"
+                className="text-orange-600 underline-offset-2 hover:underline dark:text-orange-400"
+              >
+                support@devpulse.com
+              </a>
+              . Include enough detail for us to verify the account when
+              relevant.
             </p>
           </section>
         </div>
